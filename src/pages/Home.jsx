@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useState }  from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import IconButton from '../components/IconButton';
 import TextBubble from '../components/TextBubble';
 
 import PlayIcon from '../assets/icons/play.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
-import CalenderIcon from '../assets/icons/calender.svg';
+import CalendarIcon from '../assets/icons/calendar.svg';
 import OmegaStand from '../assets/img/omega-stand.png';
 
 export default function Home() {
+    const navigate = useNavigate();
+    const [bubbleText, setBubbleText] = useState("You can do it");
+
+    const handlePlayClick = () => {};
+    const handleSettingsClick = () => {
+        navigate("/settings");
+    };
+    const handleCalenderClick = () => {
+        navigate("/calendar");
+    };
+
     return (
         <div className="page-background d-flex flex-column vh-100">
 
@@ -22,18 +35,18 @@ export default function Home() {
                 <div className="flex-grow-1 d-flex justify-content-start align-items-center gap-2">
                     <img src={OmegaStand} className="scale-omega"></img>
                     <div className="d-flex justify-conten-center align-items-start h-100">
-                        <TextBubble text={"You can do it"}></TextBubble>
+                        <TextBubble text={bubbleText} />
                     </div>
                 </div>
             </main>
 
             <footer className="d-flex justify-content-between align-items-center p-4" style={{ height: '100px' }}>
                 <div>
-                    <IconButton icon={SettingsIcon} />
+                    <IconButton id="settings-btn" icon={SettingsIcon} onClick={handleSettingsClick}/>
                 </div>
-                    <IconButton icon={PlayIcon} />
+                    <IconButton id="play-btn" icon={PlayIcon} onClick={handlePlayClick}/>
                 <div>
-                    <IconButton icon={CalenderIcon} />
+                    <IconButton id="calender-btn" icon={CalendarIcon} onClick={handleCalenderClick}/>
                 </div>
             </footer>
         </div>
