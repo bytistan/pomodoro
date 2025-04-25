@@ -1,53 +1,145 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Timer from '../components/Timer';
 import IconButton from '../components/IconButton';
 import TextBubble from '../components/TextBubble';
 
 import PlayIcon from '../assets/icons/play.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
 import CalendarIcon from '../assets/icons/calendar.svg';
+import PauseIcon from "../assets/icons/pause.svg";
+import CancelIcon from "../assets/icons/delete.svg";
+
 import OmegaStand from '../assets/img/omega-stand.png';
+import OmegaRun from "../assets/img/omega-run.png";
 
 export default function Home() {
     const navigate = useNavigate();
+
     const [bubbleText, setBubbleText] = useState("You can do it");
 
-    const handlePlayClick = () => {};
+    const [isVisiable, setIsVisiable] = useState(true);
+    const [isCancelVisiable, setIsCancelVisiable] = useState(false);
+
+    const [timeLeft, setTimeLeft] = useState(25 * 60);
+    const [isRunning, setIsRunning] = useState(false);
+
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
+    useEffect(() => {
+        if (!isRunning) return;
+
+        const interval = setInterval(() => {
+            setTimeLeft((prevTime) => {
+                if (prevTime <= 0) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prevTime - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isRunning]);
+
+    const handlePlayClick = () => {
+        if (timeLeft === 0) {
+            setTimeLeft(25 * 60);
+        }
+
+        setIsRunning(true);
+        setIsVisiable(false);
+        setIsCancelVisiable(false);
+    };
+
+    const handlePauseClick = () => {
+        setIsRunning(false);
+        setIsCancelVisiable(true);
+    };
+
     const handleSettingsClick = () => {
         navigate("/settings");
     };
+
     const handleCalenderClick = () => {
         navigate("/calendar");
     };
+
+    const handleCancelClick = () => {
+        setIsRunning(false);
+        setIsVisiable(true);
+
+        setTimeLeft(25 * 60);
+    }
 
     return (
         <div className="page-background d-flex flex-column vh-100">
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
-                <div className="flex-grow-1">  
-                    <div className="position-relative bg-white p-3 rounded-4 d-flex justify-content-center align-items-center">
-                        <p className="clock-text fw-bold">25:00</p>
-                        <p className="text-gray position-absolute top-0 end-0 fs-5 fw-bold p-3">1/4</p>
-                    </div>
+                <div className="flex-grow-1">
+                    <Timer timeLeft={timeLeft} isRunning={isRunning} />
                 </div>
 
                 <div className="flex-grow-1 d-flex justify-content-start align-items-center gap-2">
-                    <img src={OmegaStand} className="scale-omega"></img>
+                    <img id="omage-img" src={OmegaStand} className="scale-omega"></img>
                     <div className="d-flex justify-conten-center align-items-start h-100">
                         <TextBubble text={bubbleText} />
                     </div>
                 </div>
             </main>
 
-            <footer className="d-flex justify-content-between align-items-center p-4" style={{ height: '100px' }}>
-                <div>
-                    <IconButton id="settings-btn" icon={SettingsIcon} onClick={handleSettingsClick}/>
-                </div>
-                    <IconButton id="play-btn" icon={PlayIcon} onClick={handlePlayClick}/>
-                <div>
-                    <IconButton id="calender-btn" icon={CalendarIcon} onClick={handleCalenderClick}/>
-                </div>
+            <footer
+                className={`d-flex justify-content-between align-items-center p-4 ${isVisiable ? '' : 'd-none'}`}
+                style={{ height: '100px' }}
+            >
+                <IconButton
+                    id="settings-btn"
+                    icon={SettingsIcon}
+                    onClick={handleSettingsClick}
+                />
+
+                <IconButton
+                    id="play-btn"
+                    icon={PlayIcon}
+                    onClick={handlePlayClick}
+                />
+
+                <IconButton
+                    id="calender-btn"
+                    icon={CalendarIcon}
+                    onClick={handleCalenderClick}
+                />
+            </footer>
+
+            <footer
+                className={`d-flex justify-content-center align-items-center p-4 gap-4 ${isVisiable ? 'd-none' : ''}`}
+                style={{ height: '100px' }}
+            >
+                <IconButton
+                    id="stop-btn"
+                    icon={PauseIcon}
+                    onClick={handlePauseClick}
+                    className={isCancelVisiable ? 'd-none' : ''}
+                />
+
+                <IconButton
+                    id="play-btn"
+                    icon={PlayIcon}
+                    onClick={handlePlayClick}
+                    className={isCancelVisiable ? '' : 'd-none'}
+                />
+
+                <IconButton
+                    id="cancel-btn"
+                    icon={CancelIcon}
+                    onClick={handleCancelClick}
+                    className={isCancelVisiable ? '' : 'd-none'}
+                />
             </footer>
         </div>
     );
