@@ -61,3 +61,13 @@ body {
 .text-gray {
   color: var(--text-gray);
 }
+
+.rounded-bubble {
+  border-radius: 6px;
+  border-bottom-left-radius: 0;
+}
+
+.scale-omega {
+  width:160px;
+  height:auto;
+}

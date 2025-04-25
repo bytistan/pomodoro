@@ -1,5 +1,6 @@
 import React from 'react';
 import IconButton from '../components/IconButton';
+import TextBubble from '../components/TextBubble';
 
 import PlayIcon from '../assets/icons/play.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
@@ -18,9 +19,10 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="flex-grow-1">
-                    <div>
-                        <img src={OmegaStand}></img>
+                <div className="flex-grow-1 d-flex justify-content-start align-items-center gap-2">
+                    <img src={OmegaStand} className="scale-omega"></img>
+                    <div className="d-flex justify-conten-center align-items-start h-100">
+                        <TextBubble text={"You can do it"}></TextBubble>
                     </div>
                 </div>
             </main>
