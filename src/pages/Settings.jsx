@@ -15,9 +15,14 @@ import Slider from '@mui/material/Slider';
 export default function Settings() {
     const [value, setValue] = useState(50);
 
+    // JSON dosyası okuma
+    const data = window.api.readJson('./src/data/settings.json');
+    console.log(data);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
 
     return (
         <div className="page-background d-flex flex-column vh-100">
