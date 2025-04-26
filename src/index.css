@@ -54,7 +54,7 @@ body {
 
 .default-button {
   background-color: var(--button-bg);
-  padding: 20px 26px;
+  padding: 20px 30px;
   border-radius: 16px;
 }
 
