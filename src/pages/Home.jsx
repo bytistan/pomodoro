@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Timer from '../components/Timer';
 import IconButton from '../components/IconButton';
 import TextBubble from '../components/TextBubble';
+import Character from '../components/Chracter';
 
 import PlayIcon from '../assets/icons/play.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
@@ -11,41 +12,14 @@ import CalendarIcon from '../assets/icons/calendar.svg';
 import PauseIcon from "../assets/icons/pause.svg";
 import CancelIcon from "../assets/icons/delete.svg";
 
-import OmegaStand from '../assets/img/omega-stand.png';
-import OmegaRun from "../assets/img/omega-run.png";
-
 export default function Home() {
-    const navigate = useNavigate();
+    const [omegaStatus, setOmegaStatus] = useState("welcome");
 
-    const [bubbleText, setBubbleText] = useState("You can do it");
+    const [timeLeft, setTimeLeft] = useState(60 * 25);
+    const [isRunning, setIsRunning] = useState(false);
 
     const [isVisiable, setIsVisiable] = useState(true);
     const [isCancelVisiable, setIsCancelVisiable] = useState(false);
-
-    const [timeLeft, setTimeLeft] = useState(25 * 60);
-    const [isRunning, setIsRunning] = useState(false);
-
-    const formatTime = (seconds) => {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-    };
-
-    useEffect(() => {
-        if (!isRunning) return;
-
-        const interval = setInterval(() => {
-            setTimeLeft((prevTime) => {
-                if (prevTime <= 0) {
-                    clearInterval(interval);
-                    return 0;
-                }
-                return prevTime - 1;
-            });
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [isRunning]);
 
     const handlePlayClick = () => {
         if (timeLeft === 0) {
@@ -55,19 +29,13 @@ export default function Home() {
         setIsRunning(true);
         setIsVisiable(false);
         setIsCancelVisiable(false);
+        setOmegaStatus("work");
     };
 
     const handlePauseClick = () => {
         setIsRunning(false);
         setIsCancelVisiable(true);
-    };
-
-    const handleSettingsClick = () => {
-        navigate("/settings");
-    };
-
-    const handleCalenderClick = () => {
-        navigate("/calendar");
+        setOmegaStatus("angry");
     };
 
     const handleCancelClick = () => {
@@ -82,13 +50,18 @@ export default function Home() {
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
                 <div className="flex-grow-1">
-                    <Timer timeLeft={timeLeft} isRunning={isRunning} />
+                    <Timer 
+                        timeLeft={timeLeft} 
+                        setTimeLeft={setTimeLeft} 
+                        isRunning={isRunning} 
+                        setIsRuning={setIsRunning}
+                    />
                 </div>
 
                 <div className="flex-grow-1 d-flex justify-content-start align-items-center gap-2">
-                    <img id="omage-img" src={OmegaStand} className="scale-omega"></img>
-                    <div className="d-flex justify-conten-center align-items-start h-100">
-                        <TextBubble text={bubbleText} />
+                    <Character status={omegaStatus}></Character>
+                    <div className="d-flex justify-content-center align-items-start h-100">
+                        <TextBubble status={omegaStatus} />
                     </div>
                 </div>
             </main>
@@ -97,11 +70,11 @@ export default function Home() {
                 className={`d-flex justify-content-between align-items-center p-4 ${isVisiable ? '' : 'd-none'}`}
                 style={{ height: '100px' }}
             >
-                <IconButton
-                    id="settings-btn"
-                    icon={SettingsIcon}
-                    onClick={handleSettingsClick}
-                />
+                <Link to="/settings">               
+                    <IconButton
+                        icon={SettingsIcon}
+                    />
+                </Link>
 
                 <IconButton
                     id="play-btn"
@@ -109,11 +82,11 @@ export default function Home() {
                     onClick={handlePlayClick}
                 />
 
-                <IconButton
-                    id="calender-btn"
-                    icon={CalendarIcon}
-                    onClick={handleCalenderClick}
-                />
+                <Link to="/calendar">               
+                    <IconButton
+                        icon={CalendarIcon}
+                    />
+                </Link>
             </footer>
 
             <footer
@@ -121,21 +94,18 @@ export default function Home() {
                 style={{ height: '100px' }}
             >
                 <IconButton
-                    id="stop-btn"
                     icon={PauseIcon}
                     onClick={handlePauseClick}
                     className={isCancelVisiable ? 'd-none' : ''}
                 />
 
                 <IconButton
-                    id="play-btn"
                     icon={PlayIcon}
                     onClick={handlePlayClick}
                     className={isCancelVisiable ? '' : 'd-none'}
                 />
 
                 <IconButton
-                    id="cancel-btn"
                     icon={CancelIcon}
                     onClick={handleCancelClick}
                     className={isCancelVisiable ? '' : 'd-none'}

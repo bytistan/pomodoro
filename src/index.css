@@ -24,16 +24,20 @@
   --button-bg: #212529;
   --text-dark: #343A40;
   --text-gray: #868E96;
+  --border-gray: #ADB5BD;
+  --box-bg: #F1F3F5;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 p {
-  margin:0;
+  margin: 0;
 }
 
 body {
@@ -44,14 +48,25 @@ body {
   background-color: var(--page-bg);
 }
 
+.box-background {
+  background-color: var(--box-bg);
+}
+
 .default-button {
   background-color: var(--button-bg);
-  padding:20px 26px;
+  padding: 20px 26px;
   border-radius: 16px;
 }
 
+.sm-button {
+  background-color: var(--button-bg);
+  padding: 10px 13px;
+  border-radius: 8px;
+  cursor:pointer;
+}
+
 .clock-text {
-  font-size:5rem;
+  font-size: 5rem;
   font-weight: bold;
   letter-spacing: 0.25rem;
   text-align: center;
@@ -68,6 +83,10 @@ body {
 }
 
 .scale-omega {
-  width:160px;
-  height:auto;
+  width: 160px;
+  height: auto;
+}
+
+.bottom-border {
+  border-bottom: 2px solid #ADB5BD;
 }

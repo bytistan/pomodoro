@@ -1,16 +1,23 @@
 import React, { useState }  from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+import IconButton from '../components/IconButton';
+
+import BackIcon from '../assets/icons/back.svg';
 
 export default function Calendar() {
-    const navigate = useNavigate();
-
     return (
         <div className="page-background d-flex flex-column vh-100">
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
             </main>
 
-            <footer className="d-flex justify-content-between align-items-center p-4" style={{ height: '100px' }}>
+            <footer className="d-flex justify-content-start align-items-center p-4" style={{ height: '100px' }}>
+                <Link to="/">                
+                    <IconButton 
+                        icon={BackIcon}
+                    ></IconButton>
+                </Link>
             </footer>
         </div>
     );

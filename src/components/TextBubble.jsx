@@ -1,9 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function TextBubble({ text }) {
+export default function TextBubble({ status }) {
+  const [bubbleText, setBubbleText] = useState("");
+
+  const phrases = {
+    welcome: [
+      "Welcome back!",
+      "Ready to be productive?",
+      "Let’s start something great!",
+      "You’ve got this!"
+    ],
+    work: [
+      "Stay focused!",
+      "Keep going!",
+      "You can do it!",
+      "Push your limits!"
+    ],
+    break: [
+      "Time to relax!",
+      "Take a deep breath.",
+      "Enjoy your break!",
+      "Stretch your legs!"
+    ],
+    angry: [
+      "Get back to work!",
+      "No excuses!",
+      "Focus. Now!",
+      "You're better than this!"
+    ],    
+    success: [
+      "Well done!",
+      "You crushed it!",
+      "Victory!",
+      "Great job finishing!"
+    ]
+  };
+
+  useEffect(() => {
+    if (phrases[status]) {
+      const options = phrases[status];
+      const random = options[Math.floor(Math.random() * options.length)];
+      setBubbleText(random);
+    } else {
+      setBubbleText("Ready?");
+    }
+  }, [status]);
+
   return (
     <div className="bg-white rounded-bubble p-3 d-flex justify-content-center align-items-center">
-        <p className="text-center fw-bold fs-5">{text}</p>
+      <p className="fw-bold fs-5">{bubbleText}</p>
     </div>
   );
 }

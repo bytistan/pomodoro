@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+
 import Home from './pages/Home.jsx';
 import Settings from './pages/Settings.jsx';
 import Calendar from './pages/Calendar.jsx';
