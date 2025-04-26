@@ -90,3 +90,7 @@ body {
 .bottom-border {
   border-bottom: 2px solid #ADB5BD;
 }
+
+.bottom-border-gray {
+  border-bottom: 3px solid #F1F3F5;
+}
