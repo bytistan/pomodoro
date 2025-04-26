@@ -76,6 +76,8 @@ export default function Settings() {
                             value={settingsData.work_time}
                             onChange={handleChangeWorkTime}
                             valueLabelDisplay='auto'
+                            max={100}
+                            min={25}
                             sx={{
                                 color: '#212529',
                                 '& .MuiSlider-track': {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Timer from '../components/Timer';
@@ -13,17 +13,27 @@ import PauseIcon from "../assets/icons/pause.svg";
 import CancelIcon from "../assets/icons/delete.svg";
 
 export default function Home() {
+    const settingsJsonFilePath = './src/data/settings.json';
+
+    const [settingsData, setSettingsData] = useState(
+        window.api.readJson(settingsJsonFilePath).pomodoro
+    );
+
     const [omegaStatus, setOmegaStatus] = useState("welcome");
 
-    const [timeLeft, setTimeLeft] = useState(60 * 25);
+    const [timeLeft, setTimeLeft] = useState(settingsData.work_time * 60);
+
     const [isRunning, setIsRunning] = useState(false);
+    const [isBreak, setIsBreak] = useState(false);
+
+    const [leftSetNumber, setLeftSetNumber] = useState(1);
 
     const [isVisiable, setIsVisiable] = useState(true);
     const [isCancelVisiable, setIsCancelVisiable] = useState(false);
 
     const handlePlayClick = () => {
         if (timeLeft === 0) {
-            setTimeLeft(25 * 60);
+            setTimeLeft(settingsData.work_time * 60);
         }
 
         setIsRunning(true);
@@ -42,19 +52,54 @@ export default function Home() {
         setIsRunning(false);
         setIsVisiable(true);
 
-        setTimeLeft(25 * 60);
+        setTimeLeft(settingsData.work_time * 60);
+    };
+
+    const handleTimeEnd = () => {
+        if (leftSetNumber >= settingsData.set_number) {
+            setIsRunning(false);
+            setLeftSetNumber(1);
+            setTimeLeft(settingsData.work_time * 60);
+            setIsVisiable(true);
+        } else {
+            setTimeLeft(
+                isBreak ? settingsData.work_time * 60 : settingsData.break_time * 60
+            );
+            setIsBreak(!isBreak);
+            if (!isBreak) {
+                setLeftSetNumber(leftSetNumber + 1);
+            }
+        }
     }
+
+    useEffect(() => {
+        if (!isRunning) return;
+
+        const interval = setInterval(() => {
+            setTimeLeft((prevTime) => {
+                if (prevTime <= 0) {
+                    clearInterval(interval);
+                    handleTimeEnd();
+
+                    return 0;
+                }
+                return prevTime - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isRunning, isBreak]);
+
 
     return (
         <div className="page-background d-flex flex-column vh-100">
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
                 <div className="flex-grow-1">
-                    <Timer 
-                        timeLeft={timeLeft} 
-                        setTimeLeft={setTimeLeft} 
-                        isRunning={isRunning} 
-                        setIsRuning={setIsRunning}
+                    <Timer
+                        timeLeft={timeLeft}
+                        totalSetNumber={settingsData.set_number}
+                        leftSetNumber={leftSetNumber}
                     />
                 </div>
 
@@ -70,7 +115,7 @@ export default function Home() {
                 className={`d-flex justify-content-between align-items-center p-4 ${isVisiable ? '' : 'd-none'}`}
                 style={{ height: '100px' }}
             >
-                <Link to="/settings">               
+                <Link to="/settings">
                     <IconButton
                         icon={SettingsIcon}
                     />
@@ -82,7 +127,7 @@ export default function Home() {
                     onClick={handlePlayClick}
                 />
 
-                <Link to="/calendar">               
+                <Link to="/calendar">
                     <IconButton
                         icon={CalendarIcon}
                     />
