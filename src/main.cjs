@@ -2,7 +2,14 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const waitOn = require('wait-on');
 
-const { createTable, insert, getAll, update, remove } = require(path.join(__dirname, './utils/database'));
+const { 
+  createTable, 
+  insert, 
+  getAll, 
+  update, 
+  remove,
+  addPointForToday
+} = require(path.join(__dirname, './utils/database'));
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -58,3 +65,6 @@ ipcMain.handle('db-remove', async (event, tableName, id) => {
   return await remove(tableName, id);
 });
 
+ipcMain.handle('db-add-point-today', async (event) => {
+  return await addPointForToday();
+});

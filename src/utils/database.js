@@ -3,6 +3,7 @@ const path = require('path');
 const { app } = require('electron');
 
 const dbPath = path.join(app.getPath('userData'), 'pomodoro.db');
+console.log(dbPath);
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
@@ -24,7 +25,6 @@ function createTable(tableName, columns) {
     });
 }
 
-// Veri ekleme
 function insert(tableName, data) {
     const keys = Object.keys(data).join(', ');
     const placeholders = Object.keys(data).map(() => '?').join(', ');
@@ -99,10 +99,44 @@ function remove(tableName, id) {
     });
 }
 
+function getByField(tableName, fieldName, value) {
+    return new Promise((resolve, reject) => {
+        db.get(
+            `SELECT * FROM ${tableName} WHERE ${fieldName} = ?`,
+            [value],
+            (err, row) => {
+                if (err) {
+                    console.error('❌ Veri çekilemedi:', err.message);
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            }
+        );
+    });
+}
+
+async function addPointForToday() {
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+
+    const existingRecord = await getByField('points', 'date', dateStr);
+
+    if (existingRecord) {
+        await update('points', existingRecord.id, { points: existingRecord.points + 1 });
+        console.log('✅ Mevcut güncelleştirildi.');
+    } else {
+        await insert('points', { date: dateStr, points: 1 });
+        console.log('✅ Yeni kayıt oluşturuldu.');
+    }
+}
+
 module.exports = {
     createTable,
     insert,
     getAll,
     update,
-    remove
+    remove,
+    getByField,
+    addPointForToday
 };

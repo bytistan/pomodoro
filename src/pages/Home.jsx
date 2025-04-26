@@ -55,7 +55,7 @@ export default function Home() {
         setTimeLeft(settingsData.work_time * 60);
     };
 
-    const handleTimeEnd = () => {
+    const handleTimeEnd = async () => {
         if (leftSetNumber >= settingsData.set_number) {
             setIsRunning(false);
             setLeftSetNumber(1);
@@ -69,6 +69,8 @@ export default function Home() {
             if (!isBreak) {
                 setLeftSetNumber(leftSetNumber + 1);
             }
+
+            await window.db.addPointToday();
         }
     }
 
@@ -89,8 +91,7 @@ export default function Home() {
 
         return () => clearInterval(interval);
     }, [isRunning, isBreak]);
-
-
+    
     return (
         <div className="page-background d-flex flex-column vh-100">
 
