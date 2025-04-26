@@ -1,4 +1,4 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
 
 contextBridge.exposeInMainWorld('api', {
@@ -34,4 +34,11 @@ contextBridge.exposeInMainWorld('api', {
             return false;
         }
     }
+});
+
+contextBridge.exposeInMainWorld('db', {
+    insert: (tableName, data) => ipcRenderer.invoke('db-insert', tableName, data),
+    getAll: (tableName) => ipcRenderer.invoke('db-get-all', tableName),
+    update: (tableName, id, data) => ipcRenderer.invoke('db-update', tableName, id, data),
+    remove: (tableName, id) => ipcRenderer.invoke('db-remove', tableName, id)
 });

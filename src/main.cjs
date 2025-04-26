@@ -1,8 +1,8 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const waitOn = require('wait-on');
 
-console.log(path.join(__dirname, './utils/electron.js'))
+const { createTable, insert, getAll, update, remove } = require(path.join(__dirname, './utils/database'));
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -11,7 +11,7 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true, 
-      contextIsolation: true,
+      contextIsolation: true
     },
   });
 
@@ -19,7 +19,11 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // Vite dev server'ı hazır olana kadar bekle
+  createTable('points', [
+      { name: 'date', type: 'TEXT NOT NULL' },
+      { name: 'points', type: 'INTEGER NOT NULL' }
+  ]);
+
   waitOn({ resources: ['http://localhost:5173'], timeout: 10000 }, (err) => {
     if (err) {
       console.error('Vite dev server hazır olmadı:', err);
@@ -29,7 +33,6 @@ app.whenReady().then(() => {
 
     createWindow();
   });
-
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
@@ -37,5 +40,21 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.handle('db-insert', async (event, tableName, data) => {
+  return await insert(tableName, data);
+});
+
+ipcMain.handle('db-get-all', async (event, tableName) => {
+  return await getAll(tableName);
+});
+
+ipcMain.handle('db-update', async (event, tableName, id, data) => {
+  return await update(tableName, id, data);
+});
+
+ipcMain.handle('db-remove', async (event, tableName, id) => {
+  return await remove(tableName, id);
 });
 
