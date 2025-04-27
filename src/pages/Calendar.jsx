@@ -41,6 +41,7 @@ export default function Calendar() {
                 <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4">
                     {calendarData.map((item, index) => (
                         <CalendarPoint
+                            key={index}
                             pointNumber={item.points}
                             monthName={item.month}
                             dateNumber={item.day}

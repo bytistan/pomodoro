@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import IconButton from '../components/IconButton';
@@ -16,13 +16,15 @@ import Slider from '@mui/material/Slider';
 export default function Settings() {
     const navigate = useNavigate();
     const settingsJsonFilePath = './src/data/settings.json';
-
+    
     const [settingsData, setSettingsData] = useState(
         window.api.readJson(settingsJsonFilePath).pomodoro
     );
 
-    const updateSetting = (key, value) => {
-        setSettingsData(prev => ({
+    const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+
+    const updateSetting = async (key, value) => {
+        await setSettingsData(prev => ({
             ...prev,
             [key]: value
         }));
@@ -40,13 +42,41 @@ export default function Settings() {
         updateSetting('is_sound', !isSound);
     }
 
+    const controlButtonDisabled = () => {
+        const decreaseBtn = document.getElementById("decrease-btn");
+        const increaseBtn = document.getElementById("increase-btn");
+    
+        const toggleButtonState = (button, condition) => {
+            if (condition) {
+                button.classList.add("sm-button-disabled");
+                button.classList.remove("sm-button");
+            } else {
+                button.classList.remove("sm-button-disabled");
+                button.classList.add("sm-button");
+            }
+        };
+    
+        toggleButtonState(decreaseBtn, settingsData.set_number <= 2);
+        toggleButtonState(increaseBtn, settingsData.set_number >= 12);
+    };
+    
+
     const increaseSetNumber = () => {
         updateSetting('set_number', Math.min(12, settingsData.set_number + 1));
     };
+    
 
     const decreaseSetNumber = () => {
-        updateSetting('set_number', Math.max(4, settingsData.set_number - 1));
+        updateSetting('set_number', Math.max(2, settingsData.set_number - 1));
     };
+
+    useEffect(() => {
+        controlButtonDisabled();
+    }, [settingsData.set_number]);
+
+    useEffect(() => {
+        setIsSaveDisabled(false);
+    }, [settingsData]);
 
     const handleSaveButton = () => {
         const success = window.api.writeJson('./src/data/settings.json', { pomodoro: settingsData });
@@ -127,11 +157,11 @@ export default function Settings() {
                         <div className='box-background p-3 rounded-3 d-flex justify-content-between align-items-center'>
                             <p className='fs-5 fw-bold'>Set Number : {settingsData.set_number}</p>
                             <div className='d-flex justify-content-center alignt-items-center gap-2'>
-                                <div className='sm-button' onClick={decreaseSetNumber}>
-                                    <img src={MinusIcon} alt='icon' />
+                                <div className='sm-button' onClick={decreaseSetNumber} id="decrease-btn">
+                                    <img src={MinusIcon} alt='icon' className='sm-button-icon'/>
                                 </div>
-                                <div className='sm-button' onClick={increaseSetNumber}>
-                                    <img src={PlusIcon} alt='icon' />
+                                <div className='sm-button' onClick={increaseSetNumber} id="increase-btn">
+                                    <img src={PlusIcon} alt='icon' className='sm-button-icon'/>
                                 </div>
                             </div>
                         </div>
@@ -149,6 +179,7 @@ export default function Settings() {
                     <IconButton
                         icon={SaveIcon}
                         onClick={handleSaveButton}
+                        isDisabled={isSaveDisabled}
                     />
                 </div>
             </footer>
