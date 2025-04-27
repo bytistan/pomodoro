@@ -11,10 +11,18 @@ const {
   addPointForToday
 } = require(path.join(__dirname, './utils/database'));
 
+const { 
+  playNotificationSound, 
+  showNotification 
+} = require(path.join(__dirname, './utils/notification'));
+
 function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
+    width: 500,
     height: 600,
+    minWidth: 500, 
+    minHeight: 600, 
+    resizable: true,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       nodeIntegration: true, 
@@ -67,4 +75,12 @@ ipcMain.handle('db-remove', async (event, tableName, id) => {
 
 ipcMain.handle('db-add-point-today', async (event) => {
   return await addPointForToday();
+});
+
+ipcMain.handle('play-notification-sound', async () => {
+  playNotificationSound();
+});
+
+ipcMain.handle('show-notification', async (event, title, body) => {
+  showNotification(title, body);
 });

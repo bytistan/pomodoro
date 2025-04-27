@@ -39,7 +39,7 @@ export default function Settings() {
     };
 
     const handleToggleSwitchChange = () => {
-        updateSetting('is_sound', !isSound);
+        updateSetting('is_sound', !settingsData.is_sound);
     }
 
     const controlButtonDisabled = () => {
@@ -82,9 +82,7 @@ export default function Settings() {
         const success = window.api.writeJson('./src/data/settings.json', { pomodoro: settingsData });
 
         if (success) {
-            new window.Notification('Settings', {
-                body: 'Settings saved successfully!'
-            });
+            window.electron.showNotification("Settings","Settings saved successfully!");
 
             navigate("/");
         } else {

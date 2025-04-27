@@ -43,3 +43,8 @@ contextBridge.exposeInMainWorld('db', {
     remove: (tableName, id) => ipcRenderer.invoke('db-remove', tableName, id),
     addPointToday: () => ipcRenderer.invoke('db-add-point-today')
 });
+
+contextBridge.exposeInMainWorld('electron', {
+    playNotificationSound: () => ipcRenderer.invoke('play-notification-sound'),
+    showNotification: (title, body) => ipcRenderer.invoke('show-notification', title, body)
+});

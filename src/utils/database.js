@@ -3,7 +3,6 @@ const path = require('path');
 const { app } = require('electron');
 
 const dbPath = path.join(app.getPath('userData'), 'pomodoro.db');
-console.log(dbPath);
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {

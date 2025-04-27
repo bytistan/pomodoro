@@ -18,8 +18,10 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",
+    "speaker": "^0.5.5",
     "sqlite3": "^5.1.7",
-    "wait-on": "^8.0.3"
+    "wait-on": "^8.0.3",
+    "wav": "^1.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

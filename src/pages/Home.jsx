@@ -51,7 +51,8 @@ export default function Home() {
     const handleCancelClick = () => {
         setIsRunning(false);
         setIsVisiable(true);
-
+        
+        setLeftSetNumber(1);
         setTimeLeft(settingsData.work_time * 60);
     };
 
@@ -61,14 +62,23 @@ export default function Home() {
             setLeftSetNumber(1);
             setTimeLeft(settingsData.work_time * 60);
             setIsVisiable(true);
+
+            new window.electron.showNotification('Home', 'Pomodoro complete!');
+
         } else {
             setTimeLeft(
                 isBreak ? settingsData.work_time * 60 : settingsData.break_time * 60
             );
+
             setIsBreak(!isBreak);
+
             if (!isBreak) {
                 setLeftSetNumber(leftSetNumber + 1);
             }
+
+            setOmegaStatus("break");
+
+            new window.electron.showNotification('Home', 'Pomodoro complete! Now it\'s time for a short break.');
 
             await window.db.addPointToday();
         }
