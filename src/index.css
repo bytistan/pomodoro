@@ -56,6 +56,17 @@ body {
   background-color: var(--button-bg);
   padding: 20px 30px;
   border-radius: 16px;
+  transition: background-color 0.3s ease, border 0.3s ease;
+  border: 3px solid var(--button-bg);
+  cursor:pointer;
+}
+
+.default-button:hover {
+  background-color: #20c997;
+}
+
+.default-button:hover .default-button-icon {
+  filter: grayscale(100%) brightness(0%);
 }
 
 .sm-button {

@@ -33,7 +33,7 @@ app.whenReady().then(() => {
 
   waitOn({ resources: ['http://localhost:5173'], timeout: 10000 }, (err) => {
     if (err) {
-      console.error('Vite dev server hazır olmadı:', err);
+      console.error('Vite dev server is not ready:', err);
       app.quit();
       return;
     }

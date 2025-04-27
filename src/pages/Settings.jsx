@@ -52,7 +52,10 @@ export default function Settings() {
         const success = window.api.writeJson('./src/data/settings.json', { pomodoro: settingsData });
 
         if (success) {
-            alert('Settings saved successfully!');
+            new window.Notification('Settings', {
+                body: 'Settings saved successfully!'
+            });
+
             navigate("/");
         } else {
             alert('An error occurred, settings could not be saved.');

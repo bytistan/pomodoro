@@ -7,9 +7,9 @@ console.log(dbPath);
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('❌ Veritabanı açılamadı:', err.message);
+        console.error('❌ Failed to open database:', err.message);
     } else {
-        console.log('✅ Veritabanı bağlantısı başarılı.');
+        console.log('✅ Database connection successful.');
     }
 });
 
@@ -18,9 +18,9 @@ function createTable(tableName, columns) {
     const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (id INTEGER PRIMARY KEY AUTOINCREMENT, ${columnsString})`;
     db.run(sql, (err) => {
         if (err) {
-            console.error(`❌ ${tableName} tablosu oluşturulamadı:`, err.message);
+            console.error(`❌ Failed to create table ${tableName}:`, err.message);
         } else {
-            console.log(`✅ ${tableName} tablosu başarıyla oluşturuldu.`);
+            console.log(`✅ Table ${tableName} created successfully.`);
         }
     });
 }
@@ -36,7 +36,7 @@ function insert(tableName, data) {
             values,
             function (err) {
                 if (err) {
-                    console.error('❌ Kayıt eklenemedi:', err.message);
+                    console.error('❌ Failed to insert record:', err.message);
                     reject(err);
                 } else {
                     resolve(this.lastID);
@@ -46,12 +46,11 @@ function insert(tableName, data) {
     });
 }
 
-// Tüm verileri çekme
 function getAll(tableName) {
     return new Promise((resolve, reject) => {
         db.all(`SELECT * FROM ${tableName}`, [], (err, rows) => {
             if (err) {
-                console.error('❌ Veriler çekilemedi:', err.message);
+                console.error('❌ Failed to fetch data:', err.message);
                 reject(err);
             } else {
                 resolve(rows);
@@ -60,7 +59,6 @@ function getAll(tableName) {
     });
 }
 
-// Veri güncelleme
 function update(tableName, id, data) {
     const updates = Object.keys(data).map(key => `${key} = ?`).join(', ');
     const values = [...Object.values(data), id];
@@ -71,7 +69,7 @@ function update(tableName, id, data) {
             values,
             function (err) {
                 if (err) {
-                    console.error('❌ Güncelleme hatası:', err.message);
+                    console.error('❌ Failed to update record:', err.message);
                     reject(err);
                 } else {
                     resolve(this.changes);
@@ -81,7 +79,6 @@ function update(tableName, id, data) {
     });
 }
 
-// Veri silme
 function remove(tableName, id) {
     return new Promise((resolve, reject) => {
         db.run(
@@ -89,7 +86,7 @@ function remove(tableName, id) {
             [id],
             function (err) {
                 if (err) {
-                    console.error('❌ Silme hatası:', err.message);
+                    console.error('❌ Failed to delete record:', err.message);
                     reject(err);
                 } else {
                     resolve(this.changes);
@@ -106,7 +103,7 @@ function getByField(tableName, fieldName, value) {
             [value],
             (err, row) => {
                 if (err) {
-                    console.error('❌ Veri çekilemedi:', err.message);
+                    console.error('❌ Failed to fetch record:', err.message);
                     reject(err);
                 } else {
                     resolve(row);
@@ -124,10 +121,10 @@ async function addPointForToday() {
 
     if (existingRecord) {
         await update('points', existingRecord.id, { points: existingRecord.points + 1 });
-        console.log('✅ Mevcut güncelleştirildi.');
+        console.log('✅ Existing record updated.');
     } else {
         await insert('points', { date: dateStr, points: 1 });
-        console.log('✅ Yeni kayıt oluşturuldu.');
+        console.log('✅ New record created.');
     }
 }
 
