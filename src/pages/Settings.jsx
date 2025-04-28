@@ -79,7 +79,11 @@ export default function Settings() {
         const success = window.api.writeJson(fileName, { pomodoro: settingsData });
 
         if (success) {
-            window.electron.showNotification("Settings","Settings saved successfully!");
+            window.electron.showNotification(
+                "Settings",
+                "Settings saved successfully!", 
+                settingsData.is_sound
+            );
 
             navigate("/");
         } else {

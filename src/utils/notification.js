@@ -3,31 +3,33 @@ const fs = require('fs');
 const path = require('path');
 const Speaker = require('speaker');
 const wav = require('wav');
-const { Notification } = require('electron'); 
+const { Notification } = require('electron');
 
 function playNotificationSound() {
-  const soundPath = path.join(__dirname, '..', 'assets', 'sounds', 'win.wav'); 
-  console.log(`Playing sound from: ${soundPath}`);
+    const soundPath = path.join(__dirname, '..', 'assets', 'sounds', 'win.wav');
+    // console.log(`Playing sound from: ${soundPath}`);
 
-  const file = fs.createReadStream(soundPath);
-  const reader = new wav.Reader();
+    const file = fs.createReadStream(soundPath);
+    const reader = new wav.Reader();
 
-  file.pipe(reader).pipe(new Speaker());
+    file.pipe(reader).pipe(new Speaker());
 }
 
-function showNotification(title, body) {
-  const notification = new Notification({
-    title: title,
-    body: body,
-    silent: true
-  });
+function showNotification(title, body, is_sound=true) {
+    const notification = new Notification({
+        title: title,
+        body: body,
+        silent: true
+    });
 
-  notification.show();
-
-  playNotificationSound();
+    notification.show();
+    
+    if (is_sound) {
+        playNotificationSound();
+    }
 }
 
 module.exports = {
-  playNotificationSound,
-  showNotification
+    playNotificationSound,
+    showNotification
 };

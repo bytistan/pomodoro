@@ -6,7 +6,6 @@ const database = require(path.join(__dirname, './utils/database'));
 const notification = require(path.join(__dirname, './utils/notification'));
 const jsonHandler = require(path.join(__dirname, './utils/jsonHandler'));
 
-
 function createWindow() {
   const win = new BrowserWindow({
     width: 500,
@@ -72,8 +71,8 @@ ipcMain.handle('play-notification-sound', async () => {
   notification.playNotificationSound();
 });
 
-ipcMain.handle('show-notification', async (event, title, body) => {
-  notification.showNotification(title, body);
+ipcMain.handle('show-notification', async (event, title, body, is_sound) => {
+  notification.showNotification(title, body, is_sound);
 });
 
 ipcMain.handle('read-json', async (event, jsonFilePath) => {

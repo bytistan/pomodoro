@@ -61,7 +61,7 @@ export default function Home() {
             setTimeLeft(settingsData.work_time * 60);
             setIsVisiable(true);
 
-            new window.electron.showNotification('Home', 'Pomodoro complete!');
+            new window.electron.showNotification('Home', 'Pomodoro complete!', settingsData.is_sound);
 
         } else {
             setTimeLeft(
@@ -76,7 +76,11 @@ export default function Home() {
 
             setOmegaStatus("break");
 
-            new window.electron.showNotification('Home', 'Pomodoro complete! Now it\'s time for a short break.');
+            new window.electron.showNotification(
+                'Home', 
+                'Pomodoro complete! Now it\'s time for a short break.',
+                settingsData.is_sound
+            );
 
             await window.db.addPointToday();
         }

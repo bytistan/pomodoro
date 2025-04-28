@@ -17,5 +17,5 @@ contextBridge.exposeInMainWorld('db', {
 
 contextBridge.exposeInMainWorld('electron', {
     playNotificationSound: () => ipcRenderer.invoke('play-notification-sound'),
-    showNotification: (title, body) => ipcRenderer.invoke('show-notification', title, body)
+    showNotification: (title, body, is_sound) => ipcRenderer.invoke('show-notification', title, body, is_sound)
 });
