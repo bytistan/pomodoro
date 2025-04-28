@@ -1,8 +1,0 @@
-{
-  "pomodoro": {
-    "work_time": 1,
-    "break_time": 5,
-    "set_number": 4,
-    "is_sound": true
-  }
-}

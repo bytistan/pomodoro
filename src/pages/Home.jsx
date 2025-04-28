@@ -12,16 +12,14 @@ import CalendarIcon from '../assets/icons/calendar.svg';
 import PauseIcon from "../assets/icons/pause.svg";
 import CancelIcon from "../assets/icons/delete.svg";
 
-export default function Home() {
-    const settingsJsonFilePath = './src/data/settings.json';
+import { useSettings } from './SettingsContext';
 
-    const [settingsData, setSettingsData] = useState(
-        window.api.readJson(settingsJsonFilePath).pomodoro
-    );
-
-    const [omegaStatus, setOmegaStatus] = useState("welcome");
+export default function Home() {   
+    const { settingsData, setSettingsData } = useSettings();
 
     const [timeLeft, setTimeLeft] = useState(settingsData.work_time * 60);
+
+    const [omegaStatus, setOmegaStatus] = useState("welcome");
 
     const [isRunning, setIsRunning] = useState(false);
     const [isBreak, setIsBreak] = useState(false);
@@ -105,7 +103,7 @@ export default function Home() {
     return (
         <div className="page-background d-flex flex-column vh-100">
 
-            <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
+            <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column gap-4">
                 <div className="flex-grow-1">
                     <Timer
                         timeLeft={timeLeft}

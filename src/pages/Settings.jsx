@@ -12,14 +12,13 @@ import MinusIcon from '../assets/icons/minus.svg';
 import ToggleSwitch from '../components/ToggleSwitch/ToggleSwitch';
 
 import Slider from '@mui/material/Slider';
+import { useSettings } from './SettingsContext';
 
 export default function Settings() {
     const navigate = useNavigate();
-    const settingsJsonFilePath = './src/data/settings.json';
+    const fileName = 'settings.json';
     
-    const [settingsData, setSettingsData] = useState(
-        window.api.readJson(settingsJsonFilePath).pomodoro
-    );
+    const { settingsData, setSettingsData } = useSettings();
 
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
@@ -28,6 +27,8 @@ export default function Settings() {
             ...prev,
             [key]: value
         }));
+
+        setIsSaveDisabled(false);
     };
 
     const handleChangeWorkTime = (event, newValue) => {
@@ -74,12 +75,8 @@ export default function Settings() {
         controlButtonDisabled();
     }, [settingsData.set_number]);
 
-    useEffect(() => {
-        setIsSaveDisabled(false);
-    }, [settingsData]);
-
     const handleSaveButton = () => {
-        const success = window.api.writeJson('./src/data/settings.json', { pomodoro: settingsData });
+        const success = window.api.writeJson(fileName, { pomodoro: settingsData });
 
         if (success) {
             window.electron.showNotification("Settings","Settings saved successfully!");

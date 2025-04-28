@@ -38,7 +38,7 @@ export default function Calendar() {
         <div className="page-background d-flex flex-column vh-100">
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
-                <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4">
+                <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4 overflow-auto">
                     {calendarData.map((item, index) => (
                         <CalendarPoint
                             key={index}
