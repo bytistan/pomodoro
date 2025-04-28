@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import TypingEffect from "./TypingEffect";
 
 export default function TextBubble({ status }) {
   const [bubbleText, setBubbleText] = useState("");
@@ -48,7 +49,7 @@ export default function TextBubble({ status }) {
 
   return (
     <div className="bg-white rounded-bubble p-3 d-flex justify-content-center align-items-center">
-      <p className="fw-bold fs-5">{bubbleText}</p>
+      <TypingEffect key={bubbleText} text={bubbleText} speed={50} />
     </div>
   );
 }

@@ -17,7 +17,11 @@ import { useSettings } from './SettingsContext';
 export default function Home() {   
     const { settingsData, setSettingsData } = useSettings();
 
-    const [timeLeft, setTimeLeft] = useState(settingsData.work_time * 60);
+    const [timeLeft, setTimeLeft] = useState(null);
+
+    useEffect(() => {
+        setTimeLeft(settingsData.work_time * 60)
+    }, [settingsData]);
 
     const [omegaStatus, setOmegaStatus] = useState("welcome");
 

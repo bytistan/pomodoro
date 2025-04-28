@@ -18,6 +18,7 @@ function createWindow() {
       nodeIntegration: true, 
       contextIsolation: true
     },
+    title:'Pomodoro'
   });
 
   win.loadURL('http://localhost:5173');
