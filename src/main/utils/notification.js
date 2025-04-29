@@ -1,8 +1,8 @@
 // utils/notification.js
 const fs = require('fs');
 const path = require('path');
-const Speaker = require('speaker');
-const wav = require('wav');
+// const Speaker = require('speaker');
+// const wav = require('wav');
 const { Notification } = require('electron');
 
 function playNotificationSound() {
@@ -24,9 +24,9 @@ function showNotification(title, body, is_sound=true) {
 
     notification.show();
     
-    if (is_sound) {
-        playNotificationSound();
-    }
+    // if (is_sound) {
+    //     playNotificationSound();
+    // }
 }
 
 module.exports = {
