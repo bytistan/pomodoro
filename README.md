@@ -27,5 +27,11 @@ Boost productivity with the Pomodoro Technique. Simple and effective timer app.
    npm run dev
    ```
 
+## Figma
+
+You can review the design file.
+
+https://www.figma.com/design/pWycS1eR5sN0Mbyym4iMYi/Pomodoro?node-id=0-1&t=PbYZzddACyMAjpY1-1
+
 ## License 📄
 MIT Licensed. 
