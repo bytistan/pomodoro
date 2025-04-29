@@ -1,12 +1,31 @@
-# React + Vite
+# Pomodoro Timer 🍅
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Boost productivity with the Pomodoro Technique. Simple and effective timer app.
 
-Currently, two official plugins are available:
+![app-general](https://github.com/user-attachments/assets/e16fb96e-e46e-4dd0-98f8-3abf9e87b9a6)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features ✨
+- **Work/Break Sessions**: 25min work + 5min break (default).
+- **Customizable Durations**: Adjust timers as needed.
+- **Notifications**: Sound alerts when time ends.
+- **Pause/Reset**: Control the timer anytime.
 
-## Expanding the ESLint configuration
+## Installation 🔧
+1. **Clone Repository**:
+   ```bash
+   git clone https://github.com/bytistan/pomodoro.git
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. **Install Dependencies**:
+   ```bash
+   cd pomodoro-app
+   npm install
+   ```
+
+3. **Run App**:
+   ```bash
+   npm run dev
+   ```
+
+## License 📄
+MIT Licensed. 
