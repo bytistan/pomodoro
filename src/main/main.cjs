@@ -13,12 +13,14 @@ function createWindow() {
         minWidth: 500,
         minHeight: 600,
         resizable: true,
+        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, '../preload.js'),
             nodeIntegration: false,
             contextIsolation: true
         },
-        title: 'Pomodoro'
+        title: 'Pomodoro',
+        icon: 'assets/icons/logo.png'
     });
 
     win.once('ready-to-show', () => {
