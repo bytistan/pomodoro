@@ -10,6 +10,11 @@ Boost productivity with the Pomodoro Technique. Simple and effective timer app.
 - **Notifications**: Sound alerts when time ends.
 - **Pause/Reset**: Control the timer anytime.
 
+## Releases 🚀  
+Download the latest release and run it directly:  
+  
+https://github.com/bytistan/pomodoro/releases/tag/beta-v1.0.0
+
 ## Installation 🔧
 1. **Clone Repository**:
    ```bash
@@ -26,6 +31,19 @@ Boost productivity with the Pomodoro Technique. Simple and effective timer app.
    ```bash
    npm run dev
    ```
+
+## Build 🛠️  
+You can build the app for both Windows and Linux.  
+  
+```bash  
+npm run build  
+```  
+ 
+```bash  
+npm run electron:package  
+```  
+ 
+After building, you will find executable files in the `dist/` directory.  
 
 ## Figma
 
