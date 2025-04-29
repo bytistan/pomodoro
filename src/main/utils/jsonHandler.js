@@ -6,7 +6,7 @@ const settingsJsonFilePath = path.join(app.getPath('userData'), 'settings.json')
 
 const defaultSettings = {
     pomodoro: {
-        work_time: 1,
+        work_time: 25,
         break_time: 5,
         set_number: 4,
         is_sound: true

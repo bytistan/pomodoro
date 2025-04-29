@@ -29,7 +29,7 @@ export default function TextBubble({ status }) {
       "Focus. Now!",
       "You're better than this!"
     ],    
-    success: [
+    complete: [
       "Well done!",
       "You crushed it!",
       "Victory!",
