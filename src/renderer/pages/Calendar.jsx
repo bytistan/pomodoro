@@ -7,7 +7,7 @@ import BackIcon from '../assets/icons/back.svg';
 
 import CalendarPoint from '../components/CalenderPoint';
 import Character from '../components/Chracter';
-import TextBubble from '../components/TextBubble';
+import PageLayout from '../components/PageLayout';
 
 export default function Calendar() {
     const [calendarData, setCalendarData] = useState([]);
@@ -37,7 +37,7 @@ export default function Calendar() {
     }, []);
 
     return (
-        <div className="page-background d-flex flex-column vh-100">
+        <PageLayout>
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
                 {calendarData.length > 0 ? (
@@ -65,6 +65,6 @@ export default function Calendar() {
                     ></IconButton>
                 </Link>
             </footer>
-        </div>
+        </PageLayout>
     );
 }

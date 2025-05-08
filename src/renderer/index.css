@@ -10,6 +10,7 @@
 
 :root {
   --page-bg: #F1F3F5;
+  --out-of-box-bg: #ced4da;
   --button-bg: #212529;
   --text-dark: #343A40;
   --text-gray: #868E96;
@@ -40,6 +41,10 @@ body {
 
 .box-background {
   background-color: var(--box-bg);
+}
+
+.out-off-page-background {
+  background-color: var(--out-of-box-bg);
 }
 
 .default-button {
@@ -121,4 +126,9 @@ body {
 
 .w-250px {
   width:250px;
+}
+
+.default-box {
+  width:500px;
+  height:600px;
 }

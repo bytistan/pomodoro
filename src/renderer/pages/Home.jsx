@@ -10,10 +10,11 @@ import SettingsIcon from '../assets/icons/settings.svg';
 import CalendarIcon from '../assets/icons/calendar.svg';
 import PauseIcon from "../assets/icons/pause.svg";
 import CancelIcon from "../assets/icons/delete.svg";
+import PageLayout from '../components/PageLayout';
 
 import { useSettings } from './SettingsContext';
 
-export default function Home() {   
+export default function Home() {
     const { settingsData, setSettingsData } = useSettings();
 
     const [timeLeft, setTimeLeft] = useState(null);
@@ -52,7 +53,7 @@ export default function Home() {
     const handleCancelClick = () => {
         setIsRunning(false);
         setIsVisiable(true);
-        
+
         setLeftSetNumber(1);
         setTimeLeft(settingsData.work_time * 60);
     };
@@ -80,7 +81,7 @@ export default function Home() {
             setOmegaStatus("break");
 
             new window.electron.showNotification(
-                'Home', 
+                'Home',
                 'Pomodoro complete! Now it\'s time for a short break.',
                 settingsData.is_sound
             );
@@ -106,10 +107,9 @@ export default function Home() {
 
         return () => clearInterval(interval);
     }, [isRunning, isBreak]);
-    
-    return (
-        <div className="page-background d-flex flex-column vh-100">
 
+    return (
+        <PageLayout>
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column gap-4">
                 <div className="flex-grow-1">
                     <Timer
@@ -169,6 +169,7 @@ export default function Home() {
                     className={isCancelVisiable ? '' : 'd-none'}
                 />
             </footer>
-        </div>
+        </PageLayout>
+
     );
 }
