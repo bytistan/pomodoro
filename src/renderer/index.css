@@ -118,3 +118,7 @@ body {
 .bottom-border-gray {
   border-bottom: 3px solid #F1F3F5;
 }
+
+.w-250px {
+  width:250px;
+}

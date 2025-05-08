@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^7.0.2",
     "bootstrap": "^5.3.5",
+    "electron-is-dev": "^3.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.2",

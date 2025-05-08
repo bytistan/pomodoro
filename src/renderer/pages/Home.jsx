@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import Timer from '../components/Timer';
 import IconButton from '../components/IconButton';
-import TextBubble from '../components/TextBubble';
 import Character from '../components/Chracter';
 
 import PlayIcon from '../assets/icons/play.svg';
@@ -120,11 +119,8 @@ export default function Home() {
                     />
                 </div>
 
-                <div className="flex-grow-1 d-flex justify-content-start align-items-center gap-2">
+                <div className="d-flex justify-content-start align-items-end gap-2">
                     <Character status={omegaStatus}></Character>
-                    <div className="d-flex justify-content-center align-items-start h-100">
-                        <TextBubble status={omegaStatus} />
-                    </div>
                 </div>
             </main>
 

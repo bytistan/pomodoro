@@ -1,10 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const waitOn = require('wait-on');
 
 const database = require(path.join(__dirname, './utils/database'));
 const notification = require(path.join(__dirname, './utils/notification'));
 const jsonHandler = require(path.join(__dirname, './utils/jsonHandler'));
+
+const isDev = require('electron-is-dev');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -13,9 +14,9 @@ function createWindow() {
         minWidth: 500,
         minHeight: 600,
         resizable: true,
-        autoHideMenuBar: true,
+        autoHideMenuBar: !isDev,
         webPreferences: {
-            preload: path.join(__dirname, '../preload.js'),
+            preload: path.join(__dirname, './preload.js'),
             nodeIntegration: false,
             contextIsolation: true
         },
@@ -27,8 +28,13 @@ function createWindow() {
         win.show();
     });
 
-    win.loadFile(path.join(__dirname, '../../build/index.html'))
-        .catch(err => console.error('Dosya yükleme hatası:', err));    
+    if (isDev) {
+        win.loadURL('http://localhost:5173')
+            .catch(err => console.error('Vite dev sunucusu yükleme hatası:', err));
+    } else {
+        win.loadFile(path.join(__dirname, '../../build/index.html'))
+            .catch(err => console.error('Dosya yükleme hatası:', err));
+    }
 }
 
 app.whenReady().then(() => {

@@ -5,7 +5,9 @@ import OmegaWork from '../assets/img/omega-run.png';
 import OmegaBreak from '../assets/img/omega-sleepy.png';
 import OmegaHappy from '../assets/img/omega-happy.png';
 
-export default function IconButton({ status }) {
+import TextBubble from './TextBubble.jsx';
+
+export default function Character({ status }) {
     let imageSrc;
 
     switch (status) {
@@ -24,16 +26,28 @@ export default function IconButton({ status }) {
         case 'complete':
             imageSrc = OmegaHappy;
             break;
+        case 'empty-page':
+            imageSrc = OmegaStand;
+            break;
         default:
             imageSrc = OmegaStand;
+            break;
     }
 
     return (
-        <img
-            id="omega-img"
-            src={imageSrc}
-            className="scale-omega"
-            alt="Omega character"
-        />
+        <div className="position-relative d-flex justify-content-start align-items-center flex-grow-1">
+            <div className="position-relative">
+                <img
+                    id="omega-img"
+                    src={imageSrc}
+                    className="scale-omega"
+                    alt="Omega character"
+                />
+                <div className="position-absolute top-0 start-100 w-250px">
+                    <TextBubble status={status}/>
+                </div>
+            </div>
+        </div>
+
     );
 }

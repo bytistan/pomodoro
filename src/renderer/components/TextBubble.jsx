@@ -34,6 +34,9 @@ export default function TextBubble({ status }) {
       "You crushed it!",
       "Victory!",
       "Great job finishing!"
+    ],
+    empty_page: [
+      "Nothing here!"
     ]
   };
 

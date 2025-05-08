@@ -6,6 +6,8 @@ import IconButton from '../components/IconButton';
 import BackIcon from '../assets/icons/back.svg';
 
 import CalendarPoint from '../components/CalenderPoint';
+import Character from '../components/Chracter';
+import TextBubble from '../components/TextBubble';
 
 export default function Calendar() {
     const [calendarData, setCalendarData] = useState([]);
@@ -38,16 +40,22 @@ export default function Calendar() {
         <div className="page-background d-flex flex-column vh-100">
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
-                <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4 overflow-auto">
-                    {calendarData.map((item, index) => (
-                        <CalendarPoint
-                            key={index}
-                            pointNumber={item.points}
-                            monthName={item.month}
-                            dateNumber={item.day}
-                        />
-                    ))}
-                </div>
+                {calendarData.length > 0 ? (
+                    <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4 overflow-auto">
+                        {calendarData.map((item, index) => (
+                            <CalendarPoint
+                                key={index}
+                                pointNumber={item.points}
+                                monthName={item.month}
+                                dateNumber={item.day}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex-grow-1 d-flex justify-content-start align-items-end gap-2">
+                        <Character status="empty_page" />
+                    </div>
+                )}
             </main>
 
             <footer className="d-flex justify-content-start align-items-center p-4" style={{ height: '100px' }}>
