@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import IconButton from '../components/IconButton';
 
 import BackIcon from '../assets/icons/back.svg';
+import NextIcon from '../assets/icons/next.svg';
+
 import SaveIcon from '../assets/icons/save.svg';
 
 import PlusIcon from '../assets/icons/plus.svg';
@@ -15,7 +17,7 @@ import Slider from '@mui/material/Slider';
 import { useSettings } from './SettingsContext';
 import PageLayout from '../components/PageLayout';
 
-export default function Settings() {
+export default function ClockSettings() {
     const navigate = useNavigate();
     const fileName = 'settings.json';
 
@@ -170,19 +172,24 @@ export default function Settings() {
                 </div>
             </main>
 
-            <footer className='position-relative d-flex justify-content-start align-items-center p-4 gap-4' style={{ height: '100px' }}>
+            <footer className='d-flex justify-content-between align-items-center p-4 gap-4' style={{ height: '100px' }}>
                 <Link to='/'>
                     <IconButton
                         icon={BackIcon}
                     />
                 </Link>
-                <div className='position-absolute start-50 top-50 translate-middle'>
+                <div>
                     <IconButton
                         icon={SaveIcon}
                         onClick={handleSaveButton}
                         isDisabled={isSaveDisabled}
                     />
                 </div>
+                <Link to='/app-settings'>
+                    <IconButton
+                        icon={NextIcon}
+                    />
+                </Link>
             </footer>
         </PageLayout>
     );

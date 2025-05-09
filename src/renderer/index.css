@@ -40,7 +40,7 @@ body {
 }
 
 .box-background {
-  background-color: var(--box-bg);
+  background-color: var(--box-bg) !important;
 }
 
 .out-off-page-background {
@@ -131,4 +131,27 @@ body {
 .default-box {
   width:500px;
   height:600px;
+}
+
+.react-select-control {
+  background-color: #F1F3F5;
+  border-radius: 18px;
+  font-weight: bold;
+  font-size: 1.3rem;
+  box-shadow: none;
+  border-color: #F1F3F5;
+  width: 100%;
+  padding: 8px;
+}
+
+.react-select-control:hover {
+  border-color: #F1F3F5;
+}
+
+.react-select-option {
+  font-size: 1.5rem;
+}
+
+.react-select-option.focused {
+  background-color: #e9ecef;
 }

@@ -128,7 +128,7 @@ export default function Home() {
                 className={`d-flex justify-content-between align-items-center p-4 ${isVisiable ? '' : 'd-none'}`}
                 style={{ height: '100px' }}
             >
-                <Link to="/settings">
+                <Link to="/clock-settings">
                     <IconButton
                         icon={SettingsIcon}
                     />
