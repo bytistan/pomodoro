@@ -2,10 +2,12 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 const database = require(path.join(__dirname, './utils/database'));
+const initDatabase = require(path.join(__dirname, './utils/initDatabase'));
 const notification = require(path.join(__dirname, './utils/notification'));
 const jsonHandler = require(path.join(__dirname, './utils/jsonHandler'));
 
 const isDev = require('electron-is-dev');
+const { initializeTables } = require('./utils/initDatabase');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -38,11 +40,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-    database.createTable('points', [
-        { name: 'date', type: 'TEXT NOT NULL' },
-        { name: 'points', type: 'INTEGER NOT NULL' }
-    ]);
-
+    initDatabase.initializeTables(database.db);
     createWindow();
 });
 

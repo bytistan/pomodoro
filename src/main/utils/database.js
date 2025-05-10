@@ -134,5 +134,6 @@ module.exports = {
     update,
     remove,
     getByField,
-    addPointForToday
+    addPointForToday,
+    db
 };

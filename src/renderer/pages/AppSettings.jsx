@@ -12,7 +12,7 @@ import Slider from '@mui/material/Slider';
 import { useSettings } from './SettingsContext';
 import PageLayout from '../components/PageLayout';
 
-import Select, { components } from 'react-select';
+import CustomDropdown from '../components/CustomDropdown';
 
 export default function AppSettings() {
     const navigate = useNavigate();
@@ -22,39 +22,9 @@ export default function AppSettings() {
 
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
-    const customStyles = {
-        control: (base) => ({
-            ...base,
-            backgroundColor: '#F1F3F5',
-            borderRadius: '18px',
-            fontWeight: 'bold',
-            fontSize: '1.3rem',
-            boxShadow: 'none',
-            borderColor: '#F1F3F5',
-            width: '100%',
-            padding: '8px',
-            '&:hover': {
-                borderColor: '#F1F3F5',
-            },
-        }),
-        option: (base, state) => ({
-            ...base,
-            backgroundColor: state.isFocused ? '#e9ecef' : 'white',
-            color: 'black',
-            fontSize: '1.3rem',
-        })
-    };
-
-    const CustomSingleValue = ({ data, ...props }) => (
-        <components.SingleValue {...props}>
-            Language : <strong>{data.label}</strong>
-        </components.SingleValue>
-    );
-
     const languageOptions = [
         { value: 'en', label: 'en' },
-        { value: 'tr', label: 'tr' },
-        { value: 'de', label: 'de' }
+        { value: 'tr', label: 'tr' }
     ];
 
     const updateSetting = async (key, value) => {
@@ -93,12 +63,14 @@ export default function AppSettings() {
                         />
                     </div>
                     <div className="w-100 position-relative">
-                        <Select
-                            styles={customStyles}
+                        <CustomDropdown
                             options={languageOptions}
+                            value={languageOptions.find(opt => opt.value === settingsData.language)}
+                            onChange={(selected) => updateSetting('language', selected.value)}
+                            labelPrefix="Language :"
                             defaultValue={languageOptions[0]}
-                            components={{ SingleValue: CustomSingleValue }}
                         />
+
                     </div>
                     <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border mb-4'>
                         <p className='fs-4 fw-bold'>Character appear</p>
