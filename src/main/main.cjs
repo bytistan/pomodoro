@@ -3,10 +3,9 @@ const path = require('path');
 
 const database = require(path.join(__dirname, './utils/database'));
 const notification = require(path.join(__dirname, './utils/notification'));
-const jsonHandler = require(path.join(__dirname, './utils/jsonHandler'));
 
 const isDev = require('electron-is-dev');
-const { initializeTables } = require('./utils/initDatabase');
+const { initialize } = require('./utils/initDatabase');
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -39,7 +38,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-    initializeTables(database);
+    initialize(database);
     createWindow();
 });
 

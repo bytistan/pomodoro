@@ -18,7 +18,7 @@ export function SettingsProvider({ children }) {
                 if (settings) {
                     const clock = await window.db.getByField('clock_settings', 'id', settings.clock_id);
                     const language = await window.db.getByField('language', 'id', settings.language_id);
-
+                    
                     setSettingsData({
                         "settings": settings,
                         "clock": clock[0],

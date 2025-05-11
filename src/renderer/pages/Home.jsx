@@ -17,11 +17,17 @@ import { useSettings } from '../context/SettingsContext';
 export default function Home() {
     const { settingsData, setSettingsData } = useSettings();
 
-    const [timeLeft, setTimeLeft] = useState(null);
+    const [ timeLeft, setTimeLeft ] = useState(null);
 
     useEffect(() => {
-        setTimeLeft(settingsData.work_time * 60)
+        if(settingsData) {
+            setTimeLeft(settingsData?.clock?.work_time * 60);
+        }
     }, [settingsData]);
+
+    if (!settingsData) {
+        return <div>wait..</div>
+    }
 
     const [omegaStatus, setOmegaStatus] = useState("welcome");
 
@@ -35,7 +41,7 @@ export default function Home() {
 
     const handlePlayClick = () => {
         if (timeLeft === 0) {
-            setTimeLeft(settingsData.work_time * 60);
+            setTimeLeft(settingsData?.clock?.work_time * 60);
         }
 
         setIsRunning(true);
@@ -55,21 +61,21 @@ export default function Home() {
         setIsVisiable(true);
 
         setLeftSetNumber(1);
-        setTimeLeft(settingsData.work_time * 60);
+        setTimeLeft(settingsData?.clock?.work_time * 60);
     };
 
     const handleTimeEnd = async () => {
-        if (leftSetNumber >= settingsData.set_number) {
+        if (leftSetNumber >= settingsData?.clock?.set_number) {
             setIsRunning(false);
             setLeftSetNumber(1);
-            setTimeLeft(settingsData.work_time * 60);
+            setTimeLeft(settingsData?.clock?.work_time * 60);
             setIsVisiable(true);
 
-            new window.electron.showNotification('Home', 'Pomodoro complete!', settingsData.is_sound);
+            new window.electron.showNotification('Home', 'Pomodoro complete!', settingsData.clock.is_sound);
 
         } else {
             setTimeLeft(
-                isBreak ? settingsData.work_time * 60 : settingsData.break_time * 60
+                isBreak ? settingsData?.clock?.work_time * 60 : settingsData.clock.break_time * 60
             );
 
             setIsBreak(!isBreak);
@@ -83,7 +89,7 @@ export default function Home() {
             new window.electron.showNotification(
                 'Home',
                 'Pomodoro complete! Now it\'s time for a short break.',
-                settingsData.is_sound
+                settingsData.clock.is_sound
             );
 
             await window.db.addPointToday();
@@ -114,7 +120,7 @@ export default function Home() {
                 <div className="flex-grow-1">
                     <Timer
                         timeLeft={timeLeft}
-                        totalSetNumber={settingsData.set_number}
+                        totalSetNumber={settingsData?.clock?.set_number}
                         leftSetNumber={leftSetNumber}
                     />
                 </div>

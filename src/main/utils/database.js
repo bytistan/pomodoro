@@ -106,7 +106,7 @@ function remove(tableName, id) {
 
 function getByField(tableName, fieldName, value) {
     return new Promise((resolve, reject) => {
-        db.get(
+        db.all(
             `SELECT * FROM ${tableName} WHERE ${fieldName} = ?`,
             [value],
             (err, row) => {
@@ -136,6 +136,27 @@ async function addPointForToday() {
     }
 }
 
+function getByMultipleFields(tableName, conditions) {
+    const keys = Object.keys(conditions);
+    const whereClause = keys.map(key => `${key} = ?`).join(' AND ');
+    const values = Object.values(conditions);
+
+    return new Promise((resolve, reject) => {
+        db.get(
+            `SELECT * FROM ${tableName} WHERE ${whereClause}`,
+            values,
+            (err, row) => {
+                if (err) {
+                    console.error('❌ Failed to fetch record:', err.message);
+                    reject(err);
+                } else {
+                    resolve(row);
+                }
+            }
+        );
+    });
+}
+
 module.exports = {
     createTable,
     insert,
@@ -144,5 +165,6 @@ module.exports = {
     remove,
     getByField,
     addPointForToday,
+    getByMultipleFields,
     db
 };

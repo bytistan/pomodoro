@@ -7,13 +7,16 @@ import './index.css';
 
 import App from './App.jsx';
 import { SettingsProvider } from './context/SettingsContext.jsx';
+import { TextsProvider } from './context/TextsContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <SettingsProvider>
-    <StrictMode>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </StrictMode>
+    <TextsProvider>
+      <StrictMode>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </StrictMode>
+    </TextsProvider>
   </SettingsProvider>
 )
