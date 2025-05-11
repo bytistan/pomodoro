@@ -13,14 +13,23 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 function createTable(tableName, columns) {
-    const columnsString = columns.map(col => `${col.name} ${col.type}`).join(', ');
-    const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (id INTEGER PRIMARY KEY AUTOINCREMENT, ${columnsString})`;
-    db.run(sql, (err) => {
-        if (err) {
-            console.error(`❌ Failed to create table ${tableName}:`, err.message);
-        } else {
-            console.log(`✅ Table ${tableName} created successfully.`);
-        }
+    return new Promise((resolve, reject) => {
+        const columnsString = columns.map(col => {
+            if (typeof col === 'string') return col;
+            if (typeof col === 'object' && col.name && col.type) return `${col.name} ${col.type}`;
+            return null;
+        }).filter(Boolean).join(', ');
+
+        const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (${columnsString})`;
+        db.run(sql, (err) => {
+            if (err) {
+                console.error(`❌ Failed to create table ${tableName}:`, err.message);
+                reject(err);
+            } else {
+                console.log(`✅ Table ${tableName} created successfully.`);
+                resolve();
+            }
+        });
     });
 }
 

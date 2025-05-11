@@ -67,6 +67,10 @@ ipcMain.handle('db-remove', async (event, tableName, id) => {
     return await database.remove(tableName, id);
 });
 
+ipcMain.handle('db-get-by-field', async (event, tableName, fieldName, value) => {
+    return await database.getByField(tableName, fieldName, value);
+});
+
 ipcMain.handle('db-add-point-today', async (event) => {
     return await database.addPointForToday();
 });

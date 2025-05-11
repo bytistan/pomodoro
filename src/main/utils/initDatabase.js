@@ -48,6 +48,7 @@ const tables = [
     {
         name: 'points',
         columns: [
+            'id INTEGER PRIMARY KEY AUTOINCREMENT',
             'date TEXT NOT NULL',
             'points INTEGER NOT NULL'
         ]
@@ -57,12 +58,10 @@ const tables = [
 async function initializeTables(database) {
     const now = new Date().toISOString();
 
-    // Tabloları oluştur
-    tables.forEach(table => {
-        database.createTable(table.name, table.columns);
-    });
+    for (const table of tables) {
+        await database.createTable(table.name, table.columns);
+    }
 
-    // Default dilleri ekle
     const languages = ['en', 'tr'];
     for (const lang of languages) {
         const existing = await database.getByField('language', 'language', lang);
@@ -75,7 +74,6 @@ async function initializeTables(database) {
         }
     }
 
-    // Varsayılan clock_settings ekle
     const clockSetting = await database.getByField('clock_settings', 'id', 1);
     if (!clockSetting) {
         await database.insert('clock_settings', {
@@ -87,7 +85,6 @@ async function initializeTables(database) {
         });
     }
 
-    // Varsayılan settings ekle
     const settings = await database.getByField('settings', 'id', 1);
     const clock = await database.getByField('clock_settings', 'id', 1);
     const lang = await database.getByField('language', 'language', 'en');
@@ -104,5 +101,6 @@ async function initializeTables(database) {
         });
     }
 }
+
 
 module.exports = { initializeTables };

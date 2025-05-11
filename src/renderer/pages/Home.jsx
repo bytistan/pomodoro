@@ -12,7 +12,7 @@ import PauseIcon from "../assets/icons/pause.svg";
 import CancelIcon from "../assets/icons/delete.svg";
 import PageLayout from '../components/PageLayout';
 
-import { useSettings } from './SettingsContext';
+import { useSettings } from '../context/SettingsContext';
 
 export default function Home() {
     const { settingsData, setSettingsData } = useSettings();

@@ -2,163 +2,128 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import IconButton from '../components/IconButton';
+import ToggleSwitch from '../components/ToggleSwitch/ToggleSwitch';
+import PageLayout from '../components/PageLayout';
 
 import BackIcon from '../assets/icons/back.svg';
 import NextIcon from '../assets/icons/next.svg';
-
 import SaveIcon from '../assets/icons/save.svg';
-
 import PlusIcon from '../assets/icons/plus.svg';
 import MinusIcon from '../assets/icons/minus.svg';
 
-import ToggleSwitch from '../components/ToggleSwitch/ToggleSwitch';
-
 import Slider from '@mui/material/Slider';
-import { useSettings } from './SettingsContext';
-import PageLayout from '../components/PageLayout';
+import { useSettings } from '../context/SettingsContext';
 
 export default function ClockSettings() {
     const navigate = useNavigate();
-    const fileName = 'settings.json';
-
-    const { settingsData, setSettingsData } = useSettings();
-
+    const { settingsData, updateClock } = useSettings();
+    const [localClock, setLocalClock] = useState(null);
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
-    const updateSetting = async (key, value) => {
-        await setSettingsData(prev => ({
-            ...prev,
-            [key]: value
-        }));
+    useEffect(() => {
+        if (settingsData.clock) {
+            setLocalClock(settingsData.clock);
+        }
+    }, [settingsData.clock]);
 
-        setIsSaveDisabled(false);
+    const updateLocalSetting = (key, value) => {
+        setLocalClock(prev => {
+            const updated = { ...prev, [key]: value };
+            setIsSaveDisabled(false);
+            return updated;
+        });
     };
 
-    const handleChangeWorkTime = (event, newValue) => {
-        updateSetting('work_time', newValue);
+    const handleChangeWorkTime = (_, newValue) => {
+        updateLocalSetting('work_time', newValue);
     };
 
-    const handleChangeBreakTime = (event, newValue) => {
-        updateSetting('break_time', newValue);
+    const handleChangeBreakTime = (_, newValue) => {
+        updateLocalSetting('break_time', newValue);
     };
 
     const handleToggleSwitchChange = () => {
-        updateSetting('is_sound', !settingsData.is_sound);
-    }
+        updateLocalSetting('is_sound', !localClock.is_sound);
+    };
+
+    const increaseSetNumber = () => {
+        updateLocalSetting('set_number', Math.min(12, localClock.set_number + 1));
+    };
+
+    const decreaseSetNumber = () => {
+        updateLocalSetting('set_number', Math.max(2, localClock.set_number - 1));
+    };
+
+    const handleSaveButton = async () => {
+        await updateClock(localClock);
+
+        window.electron.showNotification(
+            "Settings",
+            "Clock settings saved successfully!",
+            localClock.is_sound
+        );
+
+        navigate("/");
+    };
 
     const controlButtonDisabled = () => {
         const decreaseBtn = document.getElementById("decrease-btn");
         const increaseBtn = document.getElementById("increase-btn");
 
-        const toggleButtonState = (button, condition) => {
-            if (condition) {
-                button.classList.add("sm-button-disabled");
-                button.classList.remove("sm-button");
-            } else {
-                button.classList.remove("sm-button-disabled");
-                button.classList.add("sm-button");
-            }
-        };
+        if (!decreaseBtn || !increaseBtn || !localClock) return;
 
-        toggleButtonState(decreaseBtn, settingsData.set_number <= 2);
-        toggleButtonState(increaseBtn, settingsData.set_number >= 12);
-    };
+        decreaseBtn.classList.toggle("sm-button-disabled", localClock.set_number <= 2);
+        decreaseBtn.classList.toggle("sm-button", localClock.set_number > 2);
 
-
-    const increaseSetNumber = () => {
-        updateSetting('set_number', Math.min(12, settingsData.set_number + 1));
-    };
-
-
-    const decreaseSetNumber = () => {
-        updateSetting('set_number', Math.max(2, settingsData.set_number - 1));
+        increaseBtn.classList.toggle("sm-button-disabled", localClock.set_number >= 12);
+        increaseBtn.classList.toggle("sm-button", localClock.set_number < 12);
     };
 
     useEffect(() => {
         controlButtonDisabled();
-    }, [settingsData.set_number]);
+    }, [localClock?.set_number]);
 
-    const handleSaveButton = () => {
-        const success = window.api.writeJson(fileName, { pomodoro: settingsData });
-
-        if (success) {
-            window.electron.showNotification(
-                "Settings",
-                "Settings saved successfully!",
-                settingsData.is_sound
-            );
-
-            navigate("/");
-        } else {
-            alert('An error occurred, settings could not be saved.');
-        }
-    }
+    if (!localClock) return null;
 
     return (
         <PageLayout>
-
             <main className='flex-grow-1 overflow-auto p-4 d-flex flex-column'>
                 <div className='gap-4 px-5 py-3 d-flex justify-content-center align-items-center flex-column bg-white flex-grow-1 rounded-4'>
                     <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border mb-4'>
                         <p className='fs-3 fw-bold'>Alarm Sound</p>
                         <ToggleSwitch
-                            isChecked={!settingsData.is_sound}
+                            isChecked={!localClock.is_sound}
                             onChange={handleToggleSwitchChange}
                         />
                     </div>
+
                     <div className='w-100 flex-column d-flex justfiy-content-start aliign-items-center'>
-                        <p className='fs-4'>Remind Every : {settingsData.work_time}min</p>
+                        <p className='fs-4'>Remind Every : {localClock.work_time}min</p>
                         <Slider
-                            value={settingsData.work_time}
+                            value={localClock.work_time}
                             onChange={handleChangeWorkTime}
                             valueLabelDisplay='auto'
                             max={100}
                             min={25}
-                            sx={{
-                                color: '#212529',
-                                '& .MuiSlider-track': {
-                                    backgroundColor: '#212529',
-                                },
-                                '& .MuiSlider-rail': {
-                                    backgroundColor: '#ADB5BD',
-                                },
-                                '& .MuiSlider-thumb': {
-                                    backgroundColor: '#212529',
-                                    width: 28,
-                                    height: 28,
-                                    border: '2px solid white',
-                                },
-                            }}
+                            sx={sliderStyles}
                         />
                     </div>
+
                     <div className='w-100 flex-column d-flex justfiy-content-start aliign-items-center'>
-                        <p className='fs-4'>Break Time : {settingsData.break_time}min</p>
+                        <p className='fs-4'>Break Time : {localClock.break_time}min</p>
                         <Slider
-                            value={settingsData.break_time}
+                            value={localClock.break_time}
                             onChange={handleChangeBreakTime}
                             valueLabelDisplay='auto'
                             max={25}
                             min={5}
-                            sx={{
-                                color: '#212529',
-                                '& .MuiSlider-track': {
-                                    backgroundColor: '#212529',
-                                },
-                                '& .MuiSlider-rail': {
-                                    backgroundColor: '#ADB5BD',
-                                },
-                                '& .MuiSlider-thumb': {
-                                    backgroundColor: '#212529',
-                                    width: 28,
-                                    height: 28,
-                                    border: '2px solid white',
-                                },
-                            }}
+                            sx={sliderStyles}
                         />
                     </div>
+
                     <div className='w-100'>
                         <div className='box-background p-3 rounded-3 d-flex justify-content-between align-items-center'>
-                            <p className='fs-5 fw-bold'>Set Number : {settingsData.set_number}</p>
+                            <p className='fs-5 fw-bold'>Set Number : {localClock.set_number}</p>
                             <div className='d-flex justify-content-center alignt-items-center gap-2'>
                                 <div className='sm-button' onClick={decreaseSetNumber} id="decrease-btn">
                                     <img src={MinusIcon} alt='icon' className='sm-button-icon' />
@@ -174,9 +139,7 @@ export default function ClockSettings() {
 
             <footer className='d-flex justify-content-between align-items-center p-4 gap-4' style={{ height: '100px' }}>
                 <Link to='/'>
-                    <IconButton
-                        icon={BackIcon}
-                    />
+                    <IconButton icon={BackIcon} />
                 </Link>
                 <div>
                     <IconButton
@@ -186,11 +149,21 @@ export default function ClockSettings() {
                     />
                 </div>
                 <Link to='/app-settings'>
-                    <IconButton
-                        icon={NextIcon}
-                    />
+                    <IconButton icon={NextIcon} />
                 </Link>
             </footer>
         </PageLayout>
     );
 }
+
+const sliderStyles = {
+    color: '#212529',
+    '& .MuiSlider-track': { backgroundColor: '#212529' },
+    '& .MuiSlider-rail': { backgroundColor: '#ADB5BD' },
+    '& .MuiSlider-thumb': {
+        backgroundColor: '#212529',
+        width: 28,
+        height: 28,
+        border: '2px solid white',
+    },
+};
