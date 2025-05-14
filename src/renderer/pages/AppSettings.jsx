@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import IconButton from '../components/IconButton';
@@ -16,38 +16,69 @@ export default function AppSettings() {
     const navigate = useNavigate();
     const { settingsData, updateSettings, updateLanguage } = useSettings();
 
-    const [localSettings, setLocalSettings] = useState(() => ({
-        is_dark_mode: settingsData.settings?.is_dark_mode ?? false,
-        is_character: settingsData.settings?.is_character ?? false,
-        character_funny_level: settingsData.settings?.character_funny_level ?? 0,
-        language: settingsData.language?.language ?? 'en'
-    }));
+    const flag = false;
+
+    const [localSettings, setLocalSettings] = useState({
+        is_dark_mode: false,
+        is_character: false,
+        character_funny_level: 0,
+        language: 'en'
+      });
+
+    useEffect(() => {
+        if (settingsData) {
+            setLocalSettings(() => ({
+                is_dark_mode: settingsData.settings?.is_dark_mode ?? false,
+                is_character: settingsData.settings?.is_character ?? false,
+                character_funny_level: settingsData.settings?.character_funny_level ?? 0,
+                language: settingsData.language?.language ?? 'en'
+            }));
+        }
+    }, [settingsData]);
+
+    if (!settingsData || !localSettings) {
+        return <div>wait..</div>
+    }
 
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
-    const languageOptions = useMemo(() => [
-        { value: 'en', label: 'en' },
-        { value: 'tr', label: 'tr' }
-    ], []);
+    const [allLanguage, setAllLanguage] = useState([]);
+
+    useEffect(() => {
+        window.db.getAll("language")
+            .then((languages) => {
+                setAllLanguage(languages);
+            })
+            .catch((error) => {
+                console.error("Error fetching languages:", error);
+            });
+    }, []);
+
+    const languageOptions = useMemo(() => {
+        return allLanguage.map(lang => ({
+            value: lang.language,
+            label: lang.language
+        }));
+    }, [allLanguage]);
 
     const updateLocal = (key, value) => {
         setLocalSettings(prev => ({
             ...prev,
             [key]: value
         }));
+
         setIsSaveDisabled(false);
     };
 
     const handleSaveButton = async () => {
         try {
+            const lang = allLanguage.find(lang => lang.language === localSettings.language);
+
             await updateSettings({
                 is_dark_mode: localSettings.is_dark_mode,
                 is_character: localSettings.is_character,
-                character_funny_level: localSettings.character_funny_level
-            });
-
-            await updateLanguage({
-                language: localSettings.language
+                character_funny_level: localSettings.character_funny_level,
+                language_id: lang.id
             });
 
             window.electron.showNotification(
@@ -62,8 +93,6 @@ export default function AppSettings() {
             console.error(error);
         }
     };
-
-    if (!settingsData.settings || !settingsData.language) return null;
 
     return (
         <PageLayout>
@@ -84,7 +113,7 @@ export default function AppSettings() {
                             value={languageOptions.find(opt => opt.value === localSettings.language)}
                             onChange={(selected) => updateLocal('language', selected.value)}
                             labelPrefix="Language :"
-                            defaultValue={languageOptions[0]}
+                            defaultValue={languageOptions}
                         />
                     </div>
 
