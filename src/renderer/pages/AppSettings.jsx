@@ -11,22 +11,24 @@ import SaveIcon from '../assets/icons/save.svg';
 
 import Slider from '@mui/material/Slider';
 import { useSettings } from '../context/SettingsContext';
+import { useTexts } from '../context/TextsContext';
 
 export default function AppSettings() {
     const navigate = useNavigate();
-    const { settingsData, commitSettings, setSettingsData } = useSettings(); 
+    const { settingsData, commitSettings, setSettingsData } = useSettings();
+    const { app_settings: t } = useTexts();
+
     const [localSettings, setLocalSettings] = useState(null);
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
     const [allLanguage, setAllLanguage] = useState([]);
 
- 
     useEffect(() => {
         if (settingsData.settings) {
             setLocalSettings({
                 is_dark_mode: settingsData.settings.is_dark_mode,
                 is_character: settingsData.settings.is_character,
                 character_funny_level: settingsData.settings.character_funny_level,
-                language: settingsData.language.language, 
+                language: settingsData.language.language,
             });
         }
     }, [settingsData.settings, settingsData.language]);
@@ -69,8 +71,8 @@ export default function AppSettings() {
             }));
 
             window.electron.showNotification(
-                "Settings",
-                "Settings saved successfully!",
+                t.notificationTitle,
+                t.notificationMessage,
                 true
             );
 
@@ -80,9 +82,8 @@ export default function AppSettings() {
             console.error(error);
         }
     };
-    
 
-    if (!settingsData || !localSettings) return <div>Loading...</div>;
+    if (!settingsData || !localSettings) return <div>{t.loading || "Loading..."}</div>;
 
     return (
         <PageLayout>
@@ -90,7 +91,7 @@ export default function AppSettings() {
                 <div className='gap-4 px-5 py-3 d-flex justify-content-center align-items-center flex-column bg-white flex-grow-1 rounded-4'>
 
                     <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border'>
-                        <p className='fs-4 fw-bold'>Dark mode</p>
+                        <p className='fs-4 fw-bold'>{t.darkMode}</p>
                         <ToggleSwitch
                             isChecked={localSettings.is_dark_mode}
                             onChange={() => updateLocal('is_dark_mode', !localSettings.is_dark_mode)}
@@ -102,13 +103,13 @@ export default function AppSettings() {
                             options={languageOptions}
                             value={languageOptions.find(opt => opt.value === localSettings.language)}
                             onChange={(selected) => updateLocal('language', selected.value)}
-                            labelPrefix="Language :"
+                            labelPrefix={t.language}
                             defaultValue={languageOptions}
                         />
                     </div>
 
                     <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border mb-4'>
-                        <p className='fs-4 fw-bold'>Character appear</p>
+                        <p className='fs-4 fw-bold'>{t.characterAppear}</p>
                         <ToggleSwitch
                             isChecked={localSettings.is_character}
                             onChange={() => updateLocal('is_character', !localSettings.is_character)}
@@ -116,7 +117,7 @@ export default function AppSettings() {
                     </div>
 
                     <div className='w-100 flex-column d-flex justify-content-start align-items-center'>
-                        <p className='fs-4'>Character funny level: {localSettings.character_funny_level}</p>
+                        <p className='fs-4'>{t.characterFunnyLevel}: {localSettings.character_funny_level}</p>
                         <Slider
                             value={localSettings.character_funny_level}
                             onChangeCommitted={(_, newValue) => updateLocal('character_funny_level', newValue)}

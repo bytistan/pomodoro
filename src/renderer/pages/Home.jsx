@@ -13,9 +13,11 @@ import CancelIcon from "../assets/icons/delete.svg";
 import PageLayout from '../components/PageLayout';
 
 import { useSettings } from '../context/SettingsContext';
+import { useTexts } from '../context/TextsContext'; 
 
 export default function Home() {
-    const { settingsData, setSettingsData } = useSettings();
+    const { settingsData } = useSettings();
+    const texts = useTexts(); 
 
     const [ timeLeft, setTimeLeft ] = useState(null);
 
@@ -26,7 +28,7 @@ export default function Home() {
     }, [settingsData]);
 
     if (!settingsData) {
-        return <div>wait..</div>
+        return <div>{texts.loading}</div>; 
     }
 
     const [omegaStatus, setOmegaStatus] = useState("welcome");
@@ -71,7 +73,11 @@ export default function Home() {
             setTimeLeft(settingsData?.clock?.work_time * 60);
             setIsVisiable(true);
 
-            new window.electron.showNotification('Home', 'Pomodoro complete!', settingsData.clock.is_sound);
+            new window.electron.showNotification(
+                'Home',
+                texts.timer.completed, 
+                settingsData.clock.is_sound
+            );
 
         } else {
             setTimeLeft(
@@ -88,7 +94,7 @@ export default function Home() {
 
             new window.electron.showNotification(
                 'Home',
-                'Pomodoro complete! Now it\'s time for a short break.',
+                `${texts.timer.completed} ${texts.timer.breakTime}`, 
                 settingsData.clock.is_sound
             );
 
@@ -126,7 +132,7 @@ export default function Home() {
                 </div>
 
                 <div className="d-flex justify-content-start align-items-end gap-2">
-                    <Character status={omegaStatus}></Character>
+                    <Character status={omegaStatus} text={texts.status[omegaStatus]} /> 
                 </div>
             </main>
 
@@ -135,9 +141,7 @@ export default function Home() {
                 style={{ height: '100px' }}
             >
                 <Link to="/clock-settings">
-                    <IconButton
-                        icon={SettingsIcon}
-                    />
+                    <IconButton icon={SettingsIcon} />
                 </Link>
 
                 <IconButton
@@ -147,9 +151,7 @@ export default function Home() {
                 />
 
                 <Link to="/calendar">
-                    <IconButton
-                        icon={CalendarIcon}
-                    />
+                    <IconButton icon={CalendarIcon} />
                 </Link>
             </footer>
 
@@ -176,6 +178,5 @@ export default function Home() {
                 />
             </footer>
         </PageLayout>
-
     );
 }

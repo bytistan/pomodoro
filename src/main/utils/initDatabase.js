@@ -37,17 +37,6 @@ const tables = [
         ]
     },
     {
-        name: 'text',
-        columns: [
-            'id INTEGER PRIMARY KEY AUTOINCREMENT',
-            'language_id INTEGER NOT NULL',
-            'text VARCHAR NOT NULL',
-            'name VARCHAR NOT NULL',
-            'created_date DATETIME NOT NULL',
-            'updated_date DATETIME'
-        ]
-    },
-    {
         name: 'points',
         columns: [
             'id INTEGER PRIMARY KEY AUTOINCREMENT',
@@ -114,57 +103,10 @@ async function insertSettings(database) {
     }
 }
 
-
-const { homeTexts } = require('./locales/homeTexts');
-const allTexts = { ...homeTexts };
-
-async function insertTexts(database) {
-    const now = new Date().toISOString();
-
-    async function getLanguageId(language) {
-        const languageRecords = await database.getByField('language', 'language', language);
-        const languageRecord = Array.isArray(languageRecords) ? languageRecords[0] : undefined;
-        
-        if (languageRecord) {
-            return languageRecord.id;
-        } else {
-            const newLang = await database.insert('language', {
-                language,
-                character_type: 0,
-                created_date: now
-            });
-            return newLang.id;
-        }
-    }
-
-    for (const [key, languages] of Object.entries(allTexts)) {
-        for (const [language, value] of Object.entries(languages)) {
-            const languageId = await getLanguageId(language);
-            const existingRecords = await database.getByMultipleFields('text', {
-                name: key,
-                language_id: languageId
-            });
-
-            const existing = Array.isArray(existingRecords) ? existingRecords[0] : undefined;
-
-            if (!existing) {
-                await database.insert('text', {
-                    language_id: languageId,
-                    text: value,
-                    name: key,
-                    created_date: now,
-                    updated_date: now
-                });
-            }
-        }
-    }
-}
-
 async function insertData(database) {
     await insertClock(database);
     await insertLanguage(database);
     await insertSettings(database);
-    await insertTexts(database);
 }
 
 async function createTables(database) {

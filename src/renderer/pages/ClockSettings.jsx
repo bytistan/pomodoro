@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import IconButton from '../components/IconButton';
@@ -13,10 +13,12 @@ import MinusIcon from '../assets/icons/minus.svg';
 
 import Slider from '@mui/material/Slider';
 import { useSettings } from '../context/SettingsContext';
+import { useTexts } from '../context/TextsContext'; 
 
 export default function ClockSettings() {
     const navigate = useNavigate();
     const { settingsData, commitClock } = useSettings();
+    const { clock_settings: t } = useTexts(); 
     const [localClock, setLocalClock] = useState(null);
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
@@ -58,8 +60,8 @@ export default function ClockSettings() {
         await commitClock(localClock);
 
         window.electron.showNotification(
-            "Settings",
-            "Clock settings saved successfully!",
+            t.notificationTitle,
+            t.notificationMessage,
             localClock.is_sound
         );
 
@@ -90,7 +92,7 @@ export default function ClockSettings() {
             <main className='flex-grow-1 overflow-auto p-4 d-flex flex-column'>
                 <div className='gap-4 px-5 py-3 d-flex justify-content-center align-items-center flex-column bg-white flex-grow-1 rounded-4'>
                     <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border mb-4'>
-                        <p className='fs-3 fw-bold'>Alarm Sound</p>
+                        <p className='fs-3 fw-bold'>{t.alarmSound}</p>
                         <ToggleSwitch
                             isChecked={!localClock.is_sound}
                             onChange={handleToggleSwitchChange}
@@ -98,7 +100,7 @@ export default function ClockSettings() {
                     </div>
 
                     <div className='w-100 flex-column d-flex justfiy-content-start aliign-items-center'>
-                        <p className='fs-4'>Remind Every : {localClock.work_time}min</p>
+                        <p className='fs-4'>{t.remindEvery} {localClock.work_time}min</p>
                         <Slider
                             value={localClock.work_time}
                             onChange={handleChangeWorkTime}
@@ -110,7 +112,7 @@ export default function ClockSettings() {
                     </div>
 
                     <div className='w-100 flex-column d-flex justfiy-content-start aliign-items-center'>
-                        <p className='fs-4'>Break Time : {localClock.break_time}min</p>
+                        <p className='fs-4'>{t.breakTime} {localClock.break_time}min</p>
                         <Slider
                             value={localClock.break_time}
                             onChange={handleChangeBreakTime}
@@ -123,7 +125,7 @@ export default function ClockSettings() {
 
                     <div className='w-100'>
                         <div className='box-background p-3 rounded-3 d-flex justify-content-between align-items-center'>
-                            <p className='fs-5 fw-bold'>Set Number : {localClock.set_number}</p>
+                            <p className='fs-5 fw-bold'>{t.setNumber} {localClock.set_number}</p>
                             <div className='d-flex justify-content-center alignt-items-center gap-2'>
                                 <div className='sm-button' onClick={decreaseSetNumber} id="decrease-btn">
                                     <img src={MinusIcon} alt='icon' className='sm-button-icon' />

@@ -7,7 +7,7 @@ import OmegaHappy from '../assets/img/omega-happy.png';
 
 import TextBubble from './TextBubble.jsx';
 
-export default function Character({ status }) {
+export default function Character({ status, text }) {
     let imageSrc;
 
     switch (status) {
@@ -44,7 +44,7 @@ export default function Character({ status }) {
                     alt="Omega character"
                 />
                 <div className="position-absolute top-0 start-100 w-250px">
-                    <TextBubble status={status}/>
+                    <TextBubble text={text}/>
                 </div>
             </div>
         </div>

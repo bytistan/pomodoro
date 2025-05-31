@@ -1,32 +1,37 @@
+// src/context/TextsContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 import { useSettings } from "./SettingsContext";
 
-const TextsContext = createContext();
+import EnTexts from "../locales/en.jsx";
+import TrTexts from "../locales/tr.jsx";
+
+const TextsContext = createContext(null);
+
+const languageFiles = {
+    en: EnTexts,
+    tr: TrTexts,
+};
 
 export function TextsProvider({ children }) {
     const { settingsData } = useSettings();
-    const [texts, setTexts] = useState({});
-    
+    const [texts, setTexts] = useState(null);
+
     useEffect(() => {
-        const fetchTexts = async () => {
-            try {
-                const code = settingsData.language?.language || 'en';
+        if (!settingsData?.language?.language) return;
 
-                const l = await window.db.getByField('language', 'language', code);
-                const language = l[0];
-                
-                const selectedLangTexts = await window.db.getByField('text','language_id',language.id);
+        const code = settingsData.language.language;
 
-                setTexts(selectedLangTexts);
-            } catch (error) {
-                console.error("❌ Error fetching texts from DB:", error);
-            }
-        };
-
-        if (settingsData.language?.id) {
-            fetchTexts();
+        if (languageFiles[code]) {
+            setTexts(languageFiles[code]);
+        } else {
+            console.warn(`⚠️ No language file found for code: ${code}`);
+            setTexts(languageFiles.en);
         }
-    }, [settingsData.language]);
+    }, [settingsData?.language]);
+
+    if (!texts) {
+        return null; // veya <div>Loading...</div>
+    }
 
     return (
         <TextsContext.Provider value={texts}>

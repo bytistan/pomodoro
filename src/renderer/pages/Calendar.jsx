@@ -9,13 +9,16 @@ import CalendarPoint from '../components/CalenderPoint';
 import Character from '../components/Chracter';
 import PageLayout from '../components/PageLayout';
 
+import { useTexts } from '../context/TextsContext';
+
 export default function Calendar() {
     const [calendarData, setCalendarData] = useState([]);
-
+    const { calendar: t } = useTexts();
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await db.getAll('points');
+                const data = await window.db.getAll('points');
                 const formattedData = data.map(item => {
                     const dateObj = new Date(item.date);
                     const day = dateObj.getDate();
@@ -29,12 +32,12 @@ export default function Calendar() {
                 });
                 setCalendarData(formattedData);
             } catch (error) {
-                console.error("Veri çekme hatası:", error);
+                console.error(t.fetchError, error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [t.fetchError]);
 
     return (
         <PageLayout>
@@ -53,7 +56,7 @@ export default function Calendar() {
                     </div>
                 ) : (
                     <div className="flex-grow-1 d-flex justify-content-start align-items-end gap-2">
-                        <Character status="empty_page" />
+                        <Character status={"empty_page"} text={t["emptyPage"]} />
                     </div>
                 )}
             </main>
@@ -62,7 +65,7 @@ export default function Calendar() {
                 <Link to="/">
                     <IconButton
                         icon={BackIcon}
-                    ></IconButton>
+                    />
                 </Link>
             </footer>
         </PageLayout>

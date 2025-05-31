@@ -30,10 +30,10 @@ function createWindow() {
 
     if (isDev) {
         win.loadURL('http://localhost:5173')
-            .catch(err => console.error('Vite dev sunucusu yükleme hatası:', err));
+            .catch(err => console.error('Vite dev server loading error:', err));
     } else {
         win.loadFile(path.join(__dirname, '../../build/index.html'))
-            .catch(err => console.error('Dosya yükleme hatası:', err));
+            .catch(err => console.error('File upload error:', err));
     }
 }
 
