@@ -14,44 +14,27 @@ import { useSettings } from '../context/SettingsContext';
 
 export default function AppSettings() {
     const navigate = useNavigate();
-    const { settingsData, updateSettings, updateLanguage } = useSettings();
-
-    const flag = false;
-
-    const [localSettings, setLocalSettings] = useState({
-        is_dark_mode: false,
-        is_character: false,
-        character_funny_level: 0,
-        language: 'en'
-      });
-
-    useEffect(() => {
-        if (settingsData) {
-            setLocalSettings(() => ({
-                is_dark_mode: settingsData.settings?.is_dark_mode ?? false,
-                is_character: settingsData.settings?.is_character ?? false,
-                character_funny_level: settingsData.settings?.character_funny_level ?? 0,
-                language: settingsData.language?.language ?? 'en'
-            }));
-        }
-    }, [settingsData]);
-
-    if (!settingsData || !localSettings) {
-        return <div>wait..</div>
-    }
-
+    const { settingsData, commitSettings, setSettingsData } = useSettings(); 
+    const [localSettings, setLocalSettings] = useState(null);
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
-
     const [allLanguage, setAllLanguage] = useState([]);
+
+ 
+    useEffect(() => {
+        if (settingsData.settings) {
+            setLocalSettings({
+                is_dark_mode: settingsData.settings.is_dark_mode,
+                is_character: settingsData.settings.is_character,
+                character_funny_level: settingsData.settings.character_funny_level,
+                language: settingsData.language.language, 
+            });
+        }
+    }, [settingsData.settings, settingsData.language]);
 
     useEffect(() => {
         window.db.getAll("language")
-            .then((languages) => {
-                setAllLanguage(languages);
-            })
-            .catch((error) => {
-                console.error("Error fetching languages:", error);
-            });
+            .then((languages) => setAllLanguage(languages))
+            .catch((error) => console.error("Error fetching languages:", error));
     }, []);
 
     const languageOptions = useMemo(() => {
@@ -66,7 +49,6 @@ export default function AppSettings() {
             ...prev,
             [key]: value
         }));
-
         setIsSaveDisabled(false);
     };
 
@@ -74,12 +56,17 @@ export default function AppSettings() {
         try {
             const lang = allLanguage.find(lang => lang.language === localSettings.language);
 
-            await updateSettings({
+            await commitSettings({
                 is_dark_mode: localSettings.is_dark_mode,
                 is_character: localSettings.is_character,
                 character_funny_level: localSettings.character_funny_level,
                 language_id: lang.id
             });
+
+            setSettingsData(prev => ({
+                ...prev,
+                language: lang
+            }));
 
             window.electron.showNotification(
                 "Settings",
@@ -93,6 +80,9 @@ export default function AppSettings() {
             console.error(error);
         }
     };
+    
+
+    if (!settingsData || !localSettings) return <div>Loading...</div>;
 
     return (
         <PageLayout>

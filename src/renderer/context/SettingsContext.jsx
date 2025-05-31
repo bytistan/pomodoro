@@ -6,7 +6,6 @@ export function SettingsProvider({ children }) {
     const [settingsData, setSettingsData] = useState({
         settings: null,
         clock: null,
-        language: null,
     });
 
     useEffect(() => {
@@ -33,7 +32,7 @@ export function SettingsProvider({ children }) {
         fetchSettings();
     }, []);    
 
-    const updateSettings = async (updatedFields) => {
+    const commitSettings = async (updatedFields) => {
         if (!settingsData.settings?.id) return;
 
         const updated = {
@@ -50,7 +49,7 @@ export function SettingsProvider({ children }) {
         }
     };
 
-    const updateClock = async (updatedFields) => {
+    const commitClock = async (updatedFields) => {
         if (!settingsData.clock?.id) return;
 
         const updated = {
@@ -67,29 +66,12 @@ export function SettingsProvider({ children }) {
         }
     };
 
-    const updateLanguage = async (updatedFields) => {
-        if (!settingsData.language?.id) return;
-
-        const updated = {
-            ...settingsData.language,
-            ...updatedFields,
-            updated_date: new Date().toISOString(),
-        };
-
-        try {
-            await window.db.update('language', settingsData.language.id, updatedFields);
-            setSettingsData(prev => ({ ...prev, language: updated }));
-        } catch (error) {
-            console.error('❌ Failed to update language in DB:', error);
-        }
-    };
-
     return (
         <SettingsContext.Provider value={{
             settingsData,
-            updateSettings,
-            updateClock,
-            updateLanguage
+            commitSettings,
+            commitClock,
+            setSettingsData
         }}>
             {children}
         </SettingsContext.Provider>

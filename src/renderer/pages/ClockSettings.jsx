@@ -16,7 +16,7 @@ import { useSettings } from '../context/SettingsContext';
 
 export default function ClockSettings() {
     const navigate = useNavigate();
-    const { settingsData, updateClock } = useSettings();
+    const { settingsData, commitClock } = useSettings();
     const [localClock, setLocalClock] = useState(null);
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
@@ -55,7 +55,7 @@ export default function ClockSettings() {
     };
 
     const handleSaveButton = async () => {
-        await updateClock(localClock);
+        await commitClock(localClock);
 
         window.electron.showNotification(
             "Settings",
