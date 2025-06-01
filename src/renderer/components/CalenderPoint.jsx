@@ -8,7 +8,7 @@ export default function CalendarPoint({ dateNumber, monthName, pointNumber = 0 }
                 <p className="fs-2 fw-bold text-dark">{dateNumber}</p>
                 <p className="text-gray fw-bold">{monthName}</p>
             </div>
-            <div className="d-flex justify-content-start align-items-center gap-2">
+            <div className="d-flex justify-content-start align-items-center gap-2 flex-wrap">
                 {Array.from({ length: pointNumber }).map((_, index) => (
                     <img key={index} src={BatteryIcon} width="48" alt="Battery Icon" />
                 ))}

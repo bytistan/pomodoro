@@ -88,15 +88,7 @@ export default function AppSettings() {
     return (
         <PageLayout>
             <main className='flex-grow-1 overflow-auto p-4 d-flex flex-column'>
-                <div className='gap-4 px-5 py-3 d-flex justify-content-center align-items-center flex-column bg-white flex-grow-1 rounded-4'>
-
-                    <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border'>
-                        <p className='fs-4 fw-bold'>{t.darkMode}</p>
-                        <ToggleSwitch
-                            isChecked={localSettings.is_dark_mode}
-                            onChange={() => updateLocal('is_dark_mode', !localSettings.is_dark_mode)}
-                        />
-                    </div>
+                <div className='gap-4 px-5 py-3 d-flex justify-content-start align-items-center flex-column bg-white flex-grow-1 rounded-4'>
 
                     <div className="w-100 position-relative">
                         <CustomDropdown
@@ -105,26 +97,6 @@ export default function AppSettings() {
                             onChange={(selected) => updateLocal('language', selected.value)}
                             labelPrefix={t.language}
                             defaultValue={languageOptions}
-                        />
-                    </div>
-
-                    <div className='w-100 d-flex justify-content-between align-items-center pb-3 bottom-border mb-4'>
-                        <p className='fs-4 fw-bold'>{t.characterAppear}</p>
-                        <ToggleSwitch
-                            isChecked={localSettings.is_character}
-                            onChange={() => updateLocal('is_character', !localSettings.is_character)}
-                        />
-                    </div>
-
-                    <div className='w-100 flex-column d-flex justify-content-start align-items-center'>
-                        <p className='fs-4'>{t.characterFunnyLevel}: {localSettings.character_funny_level}</p>
-                        <Slider
-                            value={localSettings.character_funny_level}
-                            onChangeCommitted={(_, newValue) => updateLocal('character_funny_level', newValue)}
-                            valueLabelDisplay='auto'
-                            max={2}
-                            min={0}
-                            sx={sliderStyles}
                         />
                     </div>
                 </div>

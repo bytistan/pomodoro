@@ -127,8 +127,8 @@ async function addPointForToday() {
 
     const existingRecord = await getByField('points', 'date', dateStr);
 
-    if (existingRecord) {
-        await update('points', existingRecord.id, { points: existingRecord.points + 1 });
+    if (existingRecord.length > 0) {
+        await update('points', existingRecord[0].id, { points: existingRecord[0].points + 1 });
         console.log('✅ Existing record updated.');
     } else {
         await insert('points', { date: dateStr, points: 1 });

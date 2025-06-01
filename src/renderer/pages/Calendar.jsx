@@ -44,7 +44,7 @@ export default function Calendar() {
 
             <main className="flex-grow-1 overflow-auto p-4 d-flex flex-column">
                 {calendarData.length > 0 ? (
-                    <div className="gap-4 d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4 overflow-auto">
+                    <div className="d-flex justify-content-start align-items-start flex-column bg-white flex-grow-1 rounded-4 overflow-auto">
                         {calendarData.map((item, index) => (
                             <CalendarPoint
                                 key={index}

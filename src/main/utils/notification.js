@@ -1,32 +1,32 @@
-// utils/notification.js
 const fs = require('fs');
 const path = require('path');
-// const Speaker = require('speaker');
-// const wav = require('wav');
 const { Notification } = require('electron');
+const { exec } = require('child_process');
 
 function playNotificationSound() {
     const soundPath = path.join(__dirname, '..', 'assets', 'sounds', 'win.wav');
-    // console.log(`Playing sound from: ${soundPath}`);
 
-    const file = fs.createReadStream(soundPath);
-    const reader = new wav.Reader();
-
-    file.pipe(reader).pipe(new Speaker());
+    if (process.platform === 'linux') {
+        exec(`aplay "${soundPath}"`, (error) => {
+            if (error) {
+                console.error('Ses çalma hatası:', error);
+            }
+        });
+    }
 }
 
-function showNotification(title, body, is_sound=true) {
+function showNotification(title, body, is_sound = true) {
     const notification = new Notification({
         title: title,
         body: body,
-        silent: true
+        silent: true 
     });
 
     notification.show();
-    
-    // if (is_sound) {
-    //     playNotificationSound();
-    // }
+
+    if (is_sound) {
+        playNotificationSound();
+    }
 }
 
 module.exports = {

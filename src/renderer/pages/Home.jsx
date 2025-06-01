@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import Timer from '../components/Timer';
@@ -66,59 +66,79 @@ export default function Home() {
         setTimeLeft(settingsData?.clock?.work_time * 60);
     };
 
+    const isHandlingRef = useRef(false); 
+
     const handleTimeEnd = async () => {
-        if (leftSetNumber >= settingsData?.clock?.set_number) {
-            setIsRunning(false);
-            setLeftSetNumber(1);
-            setTimeLeft(settingsData?.clock?.work_time * 60);
-            setIsVisiable(true);
-
-            new window.electron.showNotification(
-                'Home',
-                texts.timer.completed, 
-                settingsData.clock.is_sound
-            );
-
-        } else {
-            setTimeLeft(
-                isBreak ? settingsData?.clock?.work_time * 60 : settingsData.clock.break_time * 60
-            );
-
-            setIsBreak(!isBreak);
-
-            if (!isBreak) {
-                setLeftSetNumber(leftSetNumber + 1);
+        if (isHandlingRef.current) return; 
+        isHandlingRef.current = true;      
+    
+        try {
+            if (leftSetNumber >= settingsData?.clock?.set_number) {
+                setIsRunning(false);
+                setLeftSetNumber(1);
+                setTimeLeft(settingsData?.clock?.work_time * 60);
+                setIsVisiable(true);
+    
+                new window.electron.showNotification(
+                    'Home',
+                    texts.timer.completed, 
+                    settingsData.clock.is_sound
+                );
+    
+                await window.db.addPointToday();
+            } else {
+                setTimeLeft(
+                    isBreak ? settingsData?.clock?.work_time * 60 : settingsData.clock.break_time * 60
+                );
+    
+                setIsBreak(!isBreak);
+    
+                if (!isBreak) {
+                    setLeftSetNumber(leftSetNumber + 1);
+                }
+    
+                setOmegaStatus("break");
+    
+                new window.electron.showNotification(
+                    'Home',
+                    `${texts.timer.completed} ${texts.timer.breakTime}`, 
+                    settingsData.clock.is_sound
+                );
             }
-
-            setOmegaStatus("break");
-
-            new window.electron.showNotification(
-                'Home',
-                `${texts.timer.completed} ${texts.timer.breakTime}`, 
-                settingsData.clock.is_sound
-            );
-
-            await window.db.addPointToday();
+        } catch (error) {
+            console.error("❌ Error in handleTimeEnd:", error);
+        } finally {
+            isHandlingRef.current = false; 
         }
-    }
+    };
+    
+
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         if (!isRunning) return;
-
-        const interval = setInterval(() => {
+    
+        intervalRef.current = setInterval(() => {
             setTimeLeft((prevTime) => {
-                if (prevTime <= 0) {
-                    clearInterval(interval);
-                    handleTimeEnd();
-
+                if (prevTime === 0) {
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
+    
+                    handleTimeEnd();  
                     return 0;
                 }
                 return prevTime - 1;
             });
         }, 1000);
-
-        return () => clearInterval(interval);
+    
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
     }, [isRunning, isBreak]);
+    
 
     return (
         <PageLayout>

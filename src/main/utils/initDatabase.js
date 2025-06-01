@@ -71,9 +71,9 @@ async function insertClock(database) {
     if (!clockSetting) {
         await database.insert('clock_settings', {
             is_sound: 1,
-            work_time: 25,
-            break_time: 5,
-            set_number: 4,
+            work_time: 1,
+            break_time: 1,
+            set_number: 1,
             created_date: now
         });
     }
